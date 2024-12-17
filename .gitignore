@@ -1,3 +1,6 @@
 *.zip
 Tools/
 data/
+staging_data_commands.sql
+staging_finwire_load1.sql
+logs/
