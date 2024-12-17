@@ -10,6 +10,8 @@
 >`$ mkdir airflow-local
  $ cd airflow-local`
 
+ 
+
 2. Fetch the standard ‘docker-compose.yaml’ file to setup airflow image within docker:
 
 >`$ curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.3.0/docker-compose.yaml'`
