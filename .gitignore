@@ -5,5 +5,3 @@ staging_data_commands.sql
 staging_finwire_load1.sql
 logs/
 .env
-dags/
-__pycache__/
