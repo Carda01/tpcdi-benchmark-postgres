@@ -6,9 +6,9 @@ from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.decorators import task
-from customermgmt_conversion import customermgmt_convert
+from customermgmt_conversion_sf3 import customermgmt_convert
 
-SF=INPUT_SF
+SF=3
 
 
 # Default arguments for dag

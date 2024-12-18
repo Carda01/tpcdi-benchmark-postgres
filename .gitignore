@@ -6,4 +6,4 @@ staging_finwire_load1.sql
 logs/
 .env
 dags/
-plugins/
+__pycache__/
