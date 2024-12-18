@@ -3,3 +3,8 @@
 ## Temporary comments (remove this section)
 - Read carefully the rules of chapter 4 (so that we know what we can do and what we can't)
 - Bulk insert, this is a study of what is best (https://www.cybertec-postgresql.com/en/bulk-load-performance-in-postgresql/)
+
+## HOW TO SET UP
+Open and run src/setup
+Open and run src/create_sf for every sf you want to run
+run the dags using CLI or bash
