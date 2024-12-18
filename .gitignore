@@ -5,5 +5,5 @@ staging_data_commands.sql
 staging_finwire_load1.sql
 logs/
 .env
-src/dags/
-src/plugins/
+dags/
+plugins/
