@@ -2,8 +2,10 @@ import numpy as np
 import pandas as pd
 import xmltodict
 
+SF=INPUT_SF
+
 def customermgmt_convert():
-    with open('dags/sf_3/Batch1/CustomerMgmt.xml') as fd:
+    with open('dags/sf_'+str(SF)+'/Batch1/CustomerMgmt.xml') as fd:
         cust = xmltodict.parse(fd.read())
         
     actions = cust['TPCDI:Actions']
@@ -119,5 +121,5 @@ def customermgmt_convert():
     # Create DataFrame at once and handle missing values
     columns = np.arange(36)
     cust_df = pd.DataFrame(rows, columns=columns).replace([None, "None"], "")
-    cust_df.to_csv('dags/sf_3/Batch1/CustomerMgmt.csv', index = False)
+    cust_df.to_csv('dags/sf_'+str(SF)+'/Batch1/CustomerMgmt.csv', index = False)
     print('Customer Management data converted from XML to CSV')
