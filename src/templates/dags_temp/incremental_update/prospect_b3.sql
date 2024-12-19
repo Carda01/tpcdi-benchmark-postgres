@@ -1,4 +1,4 @@
-DROP TABLE inserted_row_counts;
+DROP TABLE IF EXISTS inserted_row_counts;
 
 with inserted_rows as(
 insert into master.prospect

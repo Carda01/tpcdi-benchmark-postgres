@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS inserted_row_counts;
 with inserted_rows as(
 insert into master.prospect
 with prospect_prior as (
@@ -138,5 +139,4 @@ batchdate as (
 	  , '+'), '')
 	from staging.prospect p
 RETURNING *)
-
 select count(*) into inserted_row_counts from inserted_rows;
