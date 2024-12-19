@@ -16,6 +16,14 @@
  * -------------------------------------------------- *
  */
 
+CREATE TABLE IF NOT EXISTS DImessages (
+    MessageDateAndTime TIMESTAMP,
+    BatchID INTEGER,
+    MessageSource VARCHAR(100),
+    MessageText VARCHAR(255),
+    MessageType VARCHAR(50),
+    MessageData VARCHAR(255)
+);
 insert into DImessages
 
 select
