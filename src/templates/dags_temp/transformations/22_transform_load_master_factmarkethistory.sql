@@ -1,4 +1,7 @@
 -- factmarkethistory
+CREATE INDEX idx_dm_date ON staging.dailymarket(dm_date);
+CREATE INDEX idx_dm_symb_date ON staging.dailymarket(dm_s_symb, dm_date);
+
 truncate table master.factmarkethistory;
 insert into master.factmarkethistory
 	with market_dates_daily as (

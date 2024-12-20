@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS inserted_row_counts;
+DROP TABLE inserted_row_counts;
 
 with inserted_rows as(
 insert into master.prospect
@@ -97,47 +97,32 @@ batchdate as (
 	, p.employer
 	, p.numbercreditcards
 	, p.networth
-	, nullif(btrim(btrim(btrim(btrim(btrim(
-	  case
-		when p.networth > 1000000 or p.income > 200000
-		then 'HighValue'
-		else ''
-	  end
-	  || '+' ||
-	  case
-		when p.numberchildren > 3 or p.numbercreditcards > 5
-		then 'Expenses'
-		else ''
-	  end
-	  , '+')
-	  || '+' ||
-	  case
-		when p.age > 45
-		then 'Boomer'
-		else ''
-	  end
-	  , '+')
-	  || '+' ||
-	  case
-		when p.income < 50000 or p.creditrating < 600 or p.networth < 100000
-		then 'MoneyAlert'
-		else ''
-	  end
-	  , '+')
-	  || '+' ||
-	  case
-		when p.numbercars > 3 or p.numbercreditcards > 7
-		then 'Spender'
-		else ''
-	  end
-	  , '+')
-	  || '+' ||
-	  case
-		when p.age < 25 and p.networth > 1000000
-		then 'Inherited'
-		else ''
-	  end
-	  , '+'), '')
+	, NULLIF(CONCAT_WS('+',
+        CASE
+            WHEN p.networth > 1000000 OR p.income > 200000 THEN 'HighValue'
+            ELSE NULL
+        END,
+        CASE
+            WHEN p.numberchildren > 3 OR p.numbercreditcards > 5 THEN 'Expenses'
+            ELSE NULL
+        END,
+        CASE
+            WHEN p.age > 45 THEN 'Boomer'
+            ELSE NULL
+        END,
+        CASE
+            WHEN p.income < 50000 OR p.creditrating < 600 OR p.networth < 100000 THEN 'MoneyAlert'
+            ELSE NULL
+        END,
+        CASE
+            WHEN p.numbercars > 3 OR p.numbercreditcards > 7 THEN 'Spender'
+            ELSE NULL
+        END,
+        CASE
+            WHEN p.age < 25 AND p.networth > 1000000 THEN 'Inherited'
+            ELSE NULL
+        END
+    ), '')
 	from staging.prospect p
 RETURNING *)
 
