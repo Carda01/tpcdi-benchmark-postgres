@@ -1,3 +1,7 @@
 *.zip
 Tools/
 data/
+logs/
+.env
+dags/
+plugins/
