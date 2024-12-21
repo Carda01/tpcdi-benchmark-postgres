@@ -5,3 +5,4 @@ logs/
 .env
 dags/
 plugins/
+.ipynb_checkpoints/
