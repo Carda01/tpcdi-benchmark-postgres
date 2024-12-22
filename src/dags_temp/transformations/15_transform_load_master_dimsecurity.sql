@@ -22,7 +22,7 @@ insert into master.dimsecurity
 		left(f.pts, 8)::date,
 		'9999-12-31'::date as enddate 
 	from staging.finwire_sec f,
-		staging.statustype s,
+		master.statustype s,
 		master.dimcompany c
 	where f.status = s.st_id
 	and ((ltrim(f.conameorcik, '0') = c.companyid::varchar) 

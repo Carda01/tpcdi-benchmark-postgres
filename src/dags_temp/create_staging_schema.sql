@@ -76,28 +76,6 @@ create table staging.dailymarket(
 	dm_vol numeric(12) not null check(dm_vol >= 0)
 );
 
-drop table if exists staging.date;
-create table staging.date(
-	sk_dateid numeric(11) not null check(sk_dateid >= 0),
-	datevalue char(20) not null,
-	datedesc char(20) not null,
-	calendaryearid numeric(4) not null check(calendaryearid >= 0),
-	calendaryeardesc char(20) not null,
-	calendarqtrid numeric(5) not null check(calendarqtrid >= 0),
-	calendarqtrdesc char(20) not null,
-	calendarmonthid numeric(6) not null check(calendarmonthid >= 0),
-	calendarmonthdesc char(20) not null,	
-	calendarweekid numeric(6) not null check(calendarweekid >= 0),
-	calendarweekdesc char(20) not null,	
-	dayofweeknum numeric(1) not null check(dayofweeknum >= 0),
-	dayofweekdesc char(10) not null,	
-	fiscalyearid numeric(4) not null check(fiscalyearid >= 0),
-	fiscalyeardesc char(20) not null,	
-	fiscalqtrid numeric(5) not null check(fiscalqtrid >= 0),
-	fiscalqtrdesc char(20) not null,	
-	holidayflag boolean
-);
-
 drop table if exists staging.finwire;
 create table staging.finwire(
 	text varchar
@@ -181,13 +159,6 @@ create table staging.hr(
 	employeephone char(14)	
 );
 
-drop table if exists staging.industry;
-create table staging.industry(
-	in_id char(2) not null,
-	in_name char(50) not null,
-	in_sc_id char(4) not null	
-);
-
 drop table if exists staging.prospect;
 create table staging.prospect(
 	agencyid char(30) not null,
@@ -214,33 +185,6 @@ create table staging.prospect(
 	networth numeric(12) check(networth >= 0)	
 );
 
-drop table if exists staging.statustype;
-create table staging.statustype(
-	st_id char(4) not null,
-	st_name char(10) not null	
-);
-
-drop table if exists staging.taxrate;
-create table staging.taxrate(
-	tx_id char(4) not null,
-	tx_name char(50) not null,
-	tx_rate numeric(6,5) not null check(tx_rate >= 0)
-);
-
-drop table if exists staging.time;
-create table staging.time(
-	sk_timeid numeric(11) not null check(sk_timeid >= 0),
-	timevalue char(20) not null,
-	hourid numeric(2) not null check(hourid >= 0),
-	hourdesc char(20) not null,
-	minuteid numeric(2) not null check(minuteid >= 0),
-	minutedesc char(20) not null,
-	secondid numeric(2) not null check(secondid >= 0),
-	seconddesc char(20) not null,
-	markethoursflag boolean,
-	officehoursflag boolean
-);
-
 drop table if exists staging.tradehistory;
 create table staging.tradehistory(
 	th_t_id numeric(15) not null check(th_t_id >= 0),
@@ -264,14 +208,6 @@ create table staging.trade(
 	t_chrg numeric(10,2) check((t_st_id = 'CMPT' and t_chrg >= 0) or (t_st_id != 'CMPT' and t_chrg is null)),
 	t_comm numeric(10,2) check((t_st_id = 'CMPT' and t_comm >= 0) or (t_st_id != 'CMPT' and t_comm is null)),
 	t_tax numeric(10,2) check((t_st_id = 'CMPT' and t_tax >= 0) or (t_st_id != 'CMPT' and t_tax is null))
-);
-
-drop table if exists staging.tradetype;
-create table staging.tradetype(
-	tt_id char(3) not null,
-	tt_name char(12) not null,
-	tt_is_sell numeric(1) not null check(tt_is_sell >= 0),
-	tt_is_mrkt numeric(1) not null check(tt_is_mrkt >= 0)	
 );
 
 drop table if exists staging.watchhistory;

@@ -34,8 +34,8 @@ insert into master.dimcompany
 	'9999-12-31'::date as enddate 
 	from 
 		staging.finwire_cmp f, 
-		staging.statustype s,
-		staging.industry i
+		master.statustype s,
+		master.industry i
 	where 
 		f.status = s.st_id 
 	and f.industryid = i.in_id;
