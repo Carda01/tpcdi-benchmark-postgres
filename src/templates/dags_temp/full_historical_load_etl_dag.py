@@ -305,6 +305,7 @@ transform_load_master_dimaccount >> transform_load_master_dimtrade
 load_master_statustype >> transform_load_master_dimtrade
 load_master_tradetype >> transform_load_master_dimtrade
 transform_load_master_dimsecurity >> transform_load_master_dimtrade
+load_master_dimessages_factmarkethistory >> transform_load_master_dimtrade
 transform_load_master_dimtrade >> load_master_dimessages_dimtrade
 transform_load_master_dimcompany >> transform_load_master_financial
 transform_load_master_dimaccount >> transform_load_master_factcashbalances
