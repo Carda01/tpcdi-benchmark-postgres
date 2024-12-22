@@ -31,27 +31,27 @@ dag_psql = DAG(
     # catchup = False
 )
 
-# Task1 - Create staging schema
-create_staging_schema = PostgresOperator(
-    task_id = "create_staging_schema",
+# Task1 - Create processing schema
+create_processing_schema = PostgresOperator(
+    task_id = "create_processing_schema",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "create_staging_schema.sql",
+    sql = "create_processing_schema.sql",
 	dag = dag_psql
 )
 
-# Task2 - Load txt and csv sources to staging
-load_txt_csv_sources_to_staging = PostgresOperator(
-    task_id = "load_txt_csv_sources_to_staging",
+# Task2 - Load txt and csv sources to processing
+load_txt_csv_sources_to_processing = PostgresOperator(
+    task_id = "load_txt_csv_sources_to_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "staging_data_commands.sql",
+    sql = "processing_data_commands.sql",
 	dag = dag_psql
 )
 
-# Task3 - Load finwire source to staging
-load_finwire_to_staging = PostgresOperator(
-    task_id = "load_finwire_to_staging",
+# Task3 - Load finwire source to processing
+load_finwire_to_processing = PostgresOperator(
+    task_id = "load_finwire_to_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "staging_finwire_load1.sql",
+    sql = "processing_finwire_load1.sql",
 	dag = dag_psql
 )
 
@@ -59,7 +59,7 @@ load_finwire_to_staging = PostgresOperator(
 parse_finwire = PostgresOperator(
     task_id = "parse_finwire",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "load_staging_finwire_db.sql",
+    sql = "load_processing_finwire_db.sql",
 	dag = dag_psql
 )
 
@@ -71,11 +71,11 @@ convert_customermgmt_xml_to_csv = PythonOperator(
     dag = dag_psql
 )
 
-# Task6 - Load customer management source to staging
-load_customer_mgmt_to_staging = PostgresOperator(
-    task_id = "load_customer_mgmt_to_staging",
+# Task6 - Load customer management source to processing
+load_customer_mgmt_to_processing = PostgresOperator(
+    task_id = "load_customer_mgmt_to_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "load_staging_customermgmt_db.sql",
+    sql = "load_processing_customermgmt_db.sql",
 	dag = dag_psql
 )
 
@@ -87,187 +87,147 @@ create_master_schema = PostgresOperator(
 	dag = dag_psql
 )
 
-# Task8 - Direct load master.tradetype
-load_master_tradetype = PostgresOperator(
-    task_id = "load_master_tradetype",
+# Task8 - Direct load those tables which do not require any transformations
+load_directly_master_tables = PostgresOperator(
+    task_id = "load_directly_master_tables",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/1_load_master_tradetype.sql",
+    sql = "from_stage_to_master.sql",
 	dag = dag_psql
 )
 
-# Task9 - Direct load master.statustype
-load_master_statustype = PostgresOperator(
-    task_id = "load_master_statustype",
-    postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/2_load_master_statustype.sql",
-	dag = dag_psql
-)
-
-# Task10 - Direct load master.taxrate
-load_master_taxrate = PostgresOperator(
-    task_id = "load_master_taxrate",
-    postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/3_load_master_taxrate.sql",
-	dag = dag_psql
-)
-
-# Task11 - Direct load master.industry
-load_master_industry = PostgresOperator(
-    task_id = "load_master_industry",
-    postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/4_load_master_industry.sql",
-	dag = dag_psql
-)
-
-# Task12 - Transform & load master.dimdate
-transform_load_master_dimdate = PostgresOperator(
-    task_id = "transform_load_master_dimdate",
-    postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/5_transform_load_master_dimdate.sql",
-	dag = dag_psql
-)
-
-# Task13 - Transform & load master.dimtime
-transform_load_master_dimtime = PostgresOperator(
-    task_id = "transform_load_master_dimtime",
-    postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/6_transform_load_master_dimtime.sql",
-	dag = dag_psql
-)
-
-# Task14 - Transform & load master.dimcompany
+# Task9 - Transform & load master.dimcompany
 transform_load_master_dimcompany = PostgresOperator(
     task_id = "transform_load_master_dimcompany",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/7_transform_load_master_dimcompany.sql",
+    sql = "/transformations/1_transform_load_master_dimcompany.sql",
 	dag = dag_psql
 )
 
-# Task15 - Load master.dimessages with alert from master.dimcompany
+# Task10 - Load master.dimessages with alert from master.dimcompany
 load_master_dimessages_dimcompany = PostgresOperator(
     task_id = "load_master_dimessages_dimcompany",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/8_load_master_dimessages_dimcompany.sql",
+    sql = "/transformations/2_load_master_dimessages_dimcompany.sql",
 	dag = dag_psql
 )
 
-# Task16 - Transform & load master.dimbroker
+# Task11 - Transform & load master.dimbroker
 transform_load_master_dimbroker = PostgresOperator(
     task_id = "transform_load_master_dimbroker",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/9_transform_load_master_dimbroker.sql",
+    sql = "/transformations/3_transform_load_master_dimbroker.sql",
 	dag = dag_psql
 )
 
-# Task17 - Transform & load master.prospect
+# Task12 - Transform & load master.prospect
 transform_load_master_prospect = PostgresOperator(
     task_id = "transform_load_master_prospect",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/10_transform_load_master_prospect.sql",
+    sql = "/transformations/4_transform_load_master_prospect.sql",
 	dag = dag_psql
 )
 
-# Task18 - Transform & load master.dimcustomer
+# Task13 - Transform & load master.dimcustomer
 transform_load_master_dimcustomer = PostgresOperator(
     task_id = "transform_load_master_dimcustomer",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/11_transform_load_master_dimcustomer.sql",
+    sql = "/transformations/5_transform_load_master_dimcustomer.sql",
 	dag = dag_psql
 )
 
-# Task19 - Load master.dimessages with alert from master.dimcustomer
+# Task14 - Load master.dimessages with alert from master.dimcustomer
 load_master_dimessages_dimcustomer = PostgresOperator(
     task_id = "load_master_dimessages_dimcustomer",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/12_load_master_dimessages_dimcustomer.sql",
+    sql = "/transformations/6_load_master_dimessages_dimcustomer.sql",
 	dag = dag_psql
 )
 
-# Task20 - Update master.prospect
+# Task15 - Update master.prospect
 update_master_prospect = PostgresOperator(
     task_id = "update_master_prospect",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/13_update_master_prospect.sql",
+    sql = "/transformations/7_update_master_prospect.sql",
 	dag = dag_psql
 )
 
-# Task21 - Transform & load master.dimaccount
+# Task16 - Transform & load master.dimaccount
 transform_load_master_dimaccount = PostgresOperator(
     task_id = "transform_load_master_dimaccount",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/14_transform_load_master_dimaccount.sql",
+    sql = "/transformations/8_transform_load_master_dimaccount.sql",
 	dag = dag_psql
 )
 
-# Task22 - Transform & load master.dimsecurity
+# Task17 - Transform & load master.dimsecurity
 transform_load_master_dimsecurity = PostgresOperator(
     task_id = "transform_load_master_dimsecurity",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/15_transform_load_master_dimsecurity.sql",
+    sql = "/transformations/9_transform_load_master_dimsecurity.sql",
 	dag = dag_psql
 )
 
-# Task23 - Transform & load master.dimtrade
+# Task18 - Transform & load master.dimtrade
 transform_load_master_dimtrade = PostgresOperator(
     task_id = "transform_load_master_dimtrade",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/16_transform_load_master_dimtrade.sql",
+    sql = "/transformations/10_transform_load_master_dimtrade.sql",
 	dag = dag_psql
 )
 
-# Task24 - Load master.dimessages with alert from master.dimtrade
+# Task19 - Load master.dimessages with alert from master.dimtrade
 load_master_dimessages_dimtrade = PostgresOperator(
     task_id = "load_master_dimessages_dimtrade",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/17_load_master_dimessages_dimtrade.sql",
+    sql = "/transformations/11_load_master_dimessages_dimtrade.sql",
 	dag = dag_psql
 )
 
-# Task25 - Transform & load master.financial
+# Task20 - Transform & load master.financial
 transform_load_master_financial = PostgresOperator(
     task_id = "transform_load_master_financial",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/18_transform_load_master_financial.sql",
+    sql = "/transformations/12_transform_load_master_financial.sql",
 	dag = dag_psql
 )
 
-# Task26 - Transform & load master.factcashbalances
+# Task21 - Transform & load master.factcashbalances
 transform_load_master_factcashbalances = PostgresOperator(
     task_id = "transform_load_master_factcashbalances",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/19_transform_load_master_factcashbalances.sql",
+    sql = "/transformations/13_transform_load_master_factcashbalances.sql",
 	dag = dag_psql
 )
 
-# Task27 - Transform & load master.factholdings
+# Task22 - Transform & load master.factholdings
 transform_load_master_factholdings = PostgresOperator(
     task_id = "transform_load_master_factholdings",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/20_transform_load_master_factholdings.sql",
+    sql = "/transformations/14_transform_load_master_factholdings.sql",
 	dag = dag_psql
 )
 
-# Task28 - Transform & load master.factwatches
+# Task23 - Transform & load master.factwatches
 transform_load_master_factwatches = PostgresOperator(
     task_id = "transform_load_master_factwatches",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/21_transform_load_master_factwatches.sql",
+    sql = "/transformations/15_transform_load_master_factwatches.sql",
 	dag = dag_psql
 )
 
-# Task29 - Transform & load master.factmarkethistory
+# Task24 - Transform & load master.factmarkethistory
 transform_load_master_factmarkethistory = PostgresOperator(
     task_id = "transform_load_master_factmarkethistory",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/22_transform_load_master_factmarkethistory.sql",
+    sql = "/transformations/16_transform_load_master_factmarkethistory.sql",
 	dag = dag_psql
 )
 
-# Task30 - Load master.dimessages with alert from master.factmarkethistory
+# Task25 - Load master.dimessages with alert from master.factmarkethistory
 load_master_dimessages_factmarkethistory = PostgresOperator(
     task_id = "load_master_dimessages_factmarkethistory",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/23_load_master_dimessages_factmarkethistory.sql",
+    sql = "/transformations/17_load_master_dimessages_factmarkethistory.sql",
 	dag = dag_psql
 )
 
@@ -275,27 +235,23 @@ load_master_dimessages_factmarkethistory = PostgresOperator(
 # Task Dependencies
 
 # Staging schema dependency
-create_staging_schema >> load_txt_csv_sources_to_staging
-create_staging_schema >> load_finwire_to_staging >> parse_finwire
-create_staging_schema >> convert_customermgmt_xml_to_csv >> load_customer_mgmt_to_staging
+create_processing_schema >> load_txt_csv_sources_to_processing
+create_processing_schema >> load_finwire_to_processing >> parse_finwire
+create_processing_schema >> convert_customermgmt_xml_to_csv >> load_customer_mgmt_to_processing
 
 # Master schema dependency
-load_txt_csv_sources_to_staging >> create_master_schema
+load_txt_csv_sources_to_processing >> create_master_schema
 parse_finwire >> create_master_schema
-load_customer_mgmt_to_staging >> create_master_schema
+load_customer_mgmt_to_processing >> create_master_schema
 
 # Transformation/Loading to master dependency
-create_master_schema >> load_master_tradetype
-create_master_schema >> load_master_statustype
-create_master_schema >> load_master_taxrate
-create_master_schema >> load_master_industry
-create_master_schema >> transform_load_master_dimdate
-create_master_schema >> transform_load_master_dimtime
-create_master_schema >> transform_load_master_dimcompany
+create_master_schema >> load_directly_master_tables
+load_directly_master_tables >> transform_load_master_dimcompany
 transform_load_master_dimcompany >> load_master_dimessages_dimcompany
-transform_load_master_dimdate >> transform_load_master_dimbroker
-transform_load_master_dimdate >> transform_load_master_prospect
-load_master_taxrate >> transform_load_master_dimcustomer
+load_directly_master_tables >> transform_load_master_dimbroker
+load_directly_master_tables >> transform_load_master_prospect
+load_directly_master_tables >> transform_load_master_dimcustomer
+load_directly_master_tables >> transform_load_master_dimsecurity
 transform_load_master_prospect >> transform_load_master_dimcustomer
 transform_load_master_dimcustomer >> load_master_dimessages_dimcustomer
 transform_load_master_dimcustomer >> update_master_prospect
@@ -303,19 +259,19 @@ transform_load_master_dimbroker >> transform_load_master_dimaccount
 transform_load_master_dimcustomer >> transform_load_master_dimaccount
 transform_load_master_dimcompany >> transform_load_master_dimsecurity
 transform_load_master_dimaccount >> transform_load_master_dimtrade
-load_master_statustype >> transform_load_master_dimtrade
-load_master_tradetype >> transform_load_master_dimtrade
+load_directly_master_tables >> transform_load_master_dimtrade
+load_directly_master_tables >> transform_load_master_dimtrade
 transform_load_master_dimsecurity >> transform_load_master_dimtrade
 load_master_dimessages_factmarkethistory >> transform_load_master_dimtrade
 transform_load_master_dimtrade >> load_master_dimessages_dimtrade
 transform_load_master_dimcompany >> transform_load_master_financial
 transform_load_master_dimaccount >> transform_load_master_factcashbalances
-transform_load_master_dimdate >> transform_load_master_factcashbalances
+load_directly_master_tables >> transform_load_master_factcashbalances
 transform_load_master_dimtrade >> transform_load_master_factholdings
 transform_load_master_dimcustomer >> transform_load_master_factwatches
 transform_load_master_dimsecurity >> transform_load_master_factwatches
-transform_load_master_dimdate >> transform_load_master_factwatches
-transform_load_master_dimdate >> transform_load_master_factmarkethistory
+load_directly_master_tables >> transform_load_master_factwatches
+load_directly_master_tables >> transform_load_master_factmarkethistory
 transform_load_master_financial >> transform_load_master_factmarkethistory
 transform_load_master_dimcompany >> transform_load_master_factmarkethistory
 transform_load_master_dimsecurity >> transform_load_master_factmarkethistory

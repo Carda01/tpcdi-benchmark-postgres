@@ -1,21 +1,21 @@
-drop schema if exists staging cascade;
-create schema staging authorization postgres;
+drop schema if exists processing cascade;
+create schema processing authorization postgres;
 
-drop table if exists staging.batchdate;
-create table staging.batchdate(
+drop table if exists processing.batchdate;
+create table processing.batchdate(
 	batchdate date not null	
 );
 
-drop table if exists staging.cashtransaction;
-create table staging.cashtransaction(
+drop table if exists processing.cashtransaction;
+create table processing.cashtransaction(
 	ct_ca_id numeric(11) not null check(ct_ca_id >= 0),
 	ct_dts timestamp not null,
 	ct_amt numeric(10, 2) not null,
 	ct_name char(100) not null
 );
 
-drop table if exists staging.customermgmt;
-create table staging.customermgmt(
+drop table if exists processing.customermgmt;
+create table processing.customermgmt(
 	--action element
 	actiontype char(9) check(actiontype in ('NEW','ADDACCT','UPDCUST','UPDACCT','CLOSEACCT','INACT')),
 	actionts varchar check(length(actionts) > 0),
@@ -66,8 +66,8 @@ create table staging.customermgmt(
 	ca_name char(50)	
 );
 
-drop table if exists staging.dailymarket;
-create table staging.dailymarket(
+drop table if exists processing.dailymarket;
+create table processing.dailymarket(
 	dm_date date not null,
 	dm_s_symb char(15) not null,
 	dm_close numeric(8, 2) not null,
@@ -76,35 +76,13 @@ create table staging.dailymarket(
 	dm_vol numeric(12) not null check(dm_vol >= 0)
 );
 
-drop table if exists staging.date;
-create table staging.date(
-	sk_dateid numeric(11) not null check(sk_dateid >= 0),
-	datevalue char(20) not null,
-	datedesc char(20) not null,
-	calendaryearid numeric(4) not null check(calendaryearid >= 0),
-	calendaryeardesc char(20) not null,
-	calendarqtrid numeric(5) not null check(calendarqtrid >= 0),
-	calendarqtrdesc char(20) not null,
-	calendarmonthid numeric(6) not null check(calendarmonthid >= 0),
-	calendarmonthdesc char(20) not null,	
-	calendarweekid numeric(6) not null check(calendarweekid >= 0),
-	calendarweekdesc char(20) not null,	
-	dayofweeknum numeric(1) not null check(dayofweeknum >= 0),
-	dayofweekdesc char(10) not null,	
-	fiscalyearid numeric(4) not null check(fiscalyearid >= 0),
-	fiscalyeardesc char(20) not null,	
-	fiscalqtrid numeric(5) not null check(fiscalqtrid >= 0),
-	fiscalqtrdesc char(20) not null,	
-	holidayflag boolean
-);
-
-drop table if exists staging.finwire;
-create table staging.finwire(
+drop table if exists processing.finwire;
+create table processing.finwire(
 	text varchar
 );
 
-drop table if exists staging.finwire_cmp;
-create table staging.finwire_cmp(
+drop table if exists processing.finwire_cmp;
+create table processing.finwire_cmp(
 	pts char(15) check(length(pts) > 0),
 	rectype char(3) check(length(rectype) > 0),
 	companyname char(60) check(length(companyname) > 0),
@@ -123,8 +101,8 @@ create table staging.finwire_cmp(
 	description char(150) check(length(description) > 0)
 );
 
-drop table if exists staging.finwire_sec;
-create table staging.finwire_sec(
+drop table if exists processing.finwire_sec;
+create table processing.finwire_sec(
 	pts char(15) check(length(pts) > 0),
 	rectype char(3) check(length(rectype) > 0),
 	symbol char(15) check(length(symbol) > 0),
@@ -139,8 +117,8 @@ create table staging.finwire_sec(
 	conameorcik char(60) check(length(conameorcik) > 0)
 );
 
-drop table if exists staging.finwire_fin;
-create table staging.finwire_fin(
+drop table if exists processing.finwire_fin;
+create table processing.finwire_fin(
 	pts char(15) check(length(pts) > 0),
 	rectype char(3) check(length(rectype) > 0),
 	year char(4) check(length(year) > 0),
@@ -160,16 +138,16 @@ create table staging.finwire_fin(
 	conameorcik char(60) check(length(conameorcik) > 0)
 );
 
-drop table if exists staging.holdinghistory;
-create table staging.holdinghistory(
+drop table if exists processing.holdinghistory;
+create table processing.holdinghistory(
 	hh_h_t_id numeric(15) not null check(hh_h_t_id >= 0),
 	hh_t_id numeric(15) not null check(hh_t_id >= 0),
 	hh_before_qty numeric(6) not null check(hh_before_qty >= 0),
 	hh_after_qty numeric(6) not null check(hh_after_qty >= 0)
 );
 
-drop table if exists staging.hr;
-create table staging.hr(
+drop table if exists processing.hr;
+create table processing.hr(
 	employeeid numeric(11) not null check(employeeid >= 0),
 	managerid numeric(11) not null check(managerid >= 0),
 	employeefirstname char(30) not null,
@@ -181,15 +159,8 @@ create table staging.hr(
 	employeephone char(14)	
 );
 
-drop table if exists staging.industry;
-create table staging.industry(
-	in_id char(2) not null,
-	in_name char(50) not null,
-	in_sc_id char(4) not null	
-);
-
-drop table if exists staging.prospect;
-create table staging.prospect(
+drop table if exists processing.prospect;
+create table processing.prospect(
 	agencyid char(30) not null,
 	lastname char(30) not null,
 	firstname char(30) not null,
@@ -214,42 +185,15 @@ create table staging.prospect(
 	networth numeric(12) check(networth >= 0)	
 );
 
-drop table if exists staging.statustype;
-create table staging.statustype(
-	st_id char(4) not null,
-	st_name char(10) not null	
-);
-
-drop table if exists staging.taxrate;
-create table staging.taxrate(
-	tx_id char(4) not null,
-	tx_name char(50) not null,
-	tx_rate numeric(6,5) not null check(tx_rate >= 0)
-);
-
-drop table if exists staging.time;
-create table staging.time(
-	sk_timeid numeric(11) not null check(sk_timeid >= 0),
-	timevalue char(20) not null,
-	hourid numeric(2) not null check(hourid >= 0),
-	hourdesc char(20) not null,
-	minuteid numeric(2) not null check(minuteid >= 0),
-	minutedesc char(20) not null,
-	secondid numeric(2) not null check(secondid >= 0),
-	seconddesc char(20) not null,
-	markethoursflag boolean,
-	officehoursflag boolean
-);
-
-drop table if exists staging.tradehistory;
-create table staging.tradehistory(
+drop table if exists processing.tradehistory;
+create table processing.tradehistory(
 	th_t_id numeric(15) not null check(th_t_id >= 0),
 	th_dts timestamp not null,
 	th_st_id char(4) not null	
 );
 
-drop table if exists staging.trade;
-create table staging.trade(
+drop table if exists processing.trade;
+create table processing.trade(
 	t_id numeric(15) not null check(t_id >= 0),
 	t_dts timestamp not null,
 	t_st_id char(4) not null,
@@ -266,24 +210,16 @@ create table staging.trade(
 	t_tax numeric(10,2) check((t_st_id = 'CMPT' and t_tax >= 0) or (t_st_id != 'CMPT' and t_tax is null))
 );
 
-drop table if exists staging.tradetype;
-create table staging.tradetype(
-	tt_id char(3) not null,
-	tt_name char(12) not null,
-	tt_is_sell numeric(1) not null check(tt_is_sell >= 0),
-	tt_is_mrkt numeric(1) not null check(tt_is_mrkt >= 0)	
-);
-
-drop table if exists staging.watchhistory;
-create table staging.watchhistory(
+drop table if exists processing.watchhistory;
+create table processing.watchhistory(
 	w_c_id numeric(11) not null check(w_c_id >= 0),
 	w_s_symb char(15) not null,
 	w_dts timestamp not null,
 	w_action char(4) check(w_action in ('ACTV', 'CNCL'))	
 );
 
-drop table if exists staging.audit;
-create table staging.audit(
+drop table if exists processing.audit;
+create table processing.audit(
 	dataset char(20) not null,
 	batchid numeric(5) check(batchid >= 0),
 	date date,

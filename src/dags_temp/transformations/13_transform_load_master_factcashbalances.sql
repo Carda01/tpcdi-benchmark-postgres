@@ -7,7 +7,7 @@ insert into master.factcashbalances
 		a.sk_accountid as sk_accountid,
 		d.sk_dateid as sk_dateid,
 		sum(ct_amt) as ct_amt_day
-		from staging.cashtransaction c,
+		from processing.cashtransaction c,
 			master.dimaccount a,
 			master.dimdate d
 		where c.ct_ca_id = a.accountid

@@ -1,12 +1,12 @@
-CREATE TEMP TABLE staging_updated_customers(
+CREATE TEMP TABLE processing_updated_customers(
 	nat_id numeric(11),
 	sk_id numeric(11)
 );
 
-INSERT INTO staging_updated_customers
+INSERT INTO processing_updated_customers
 SELECT master.dimcustomer.customerid, master.dimcustomer.sk_customerid
-FROM master.dimcustomer, staging.customer
-where staging.customer.CDC_FLAG = 'U' and master.dimcustomer.customerid = staging.customer.C_ID and master.dimcustomer.iscurrent = true;
+FROM master.dimcustomer, processing.customer
+where processing.customer.CDC_FLAG = 'U' and master.dimcustomer.customerid = processing.customer.C_ID and master.dimcustomer.iscurrent = true;
 
 
 
@@ -14,7 +14,7 @@ where staging.customer.CDC_FLAG = 'U' and master.dimcustomer.customerid = stagin
 UPDATE master.dimcustomer prev_customer SET
 	iscurrent = false,
 	enddate = b.batchdate
-FROM staging.batchdate b, staging.customer post_customer
+FROM processing.batchdate b, processing.customer post_customer
 WHERE post_customer.CDC_FLAG = 'U' and post_customer.C_ID = prev_customer.customerid and prev_customer.iscurrent = true;
 
 
@@ -97,7 +97,7 @@ WITH sk_customer as (
 			2 as batchid,
 			batchdate as effectivedate,
 			'9999-12-31'::date as enddate
-	FROM staging.customer, master.statustype, master.taxrate natrate, master.taxrate locrate, staging.batchdate, sk_customer, master.prospect pros
+	FROM processing.customer, master.statustype, master.taxrate natrate, master.taxrate locrate, processing.batchdate, sk_customer, master.prospect pros
 	WHERE C_ST_ID = ST_ID and C_NAT_TX_ID = natrate.TX_ID and C_LCL_TX_ID = locrate.TX_ID and
 			C_F_NAME = pros.FirstName and
 			C_L_NAME = pros.LastName and
@@ -110,6 +110,6 @@ SELECT * from customer_insert;
 
 UPDATE master.dimaccount SET
     sk_customerid = master.dimcustomer.sk_customerid
-FROM master.dimcustomer, staging_updated_customers, master.dimaccount da
-where master.dimcustomer.customerid = staging_updated_customers.nat_id and master.dimcustomer.iscurrent = true
-	and da.sk_customerid = staging_updated_customers.sk_id and da.IsCurrent = true;
+FROM master.dimcustomer, processing_updated_customers, master.dimaccount da
+where master.dimcustomer.customerid = processing_updated_customers.nat_id and master.dimcustomer.iscurrent = true
+	and da.sk_customerid = processing_updated_customers.sk_id and da.IsCurrent = true;

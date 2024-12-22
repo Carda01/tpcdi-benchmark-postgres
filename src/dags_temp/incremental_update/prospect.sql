@@ -34,7 +34,7 @@ with prospect_prior as (
 
 prior_date as(
 select prospect_prior.agencyid as agencyid, prospect_prior.sk_updatedateid as sk_updatedateid from
-staging.prospect as p
+processing.prospect as p
 inner join prospect_prior
 on prospect_prior.agencyid = p.agencyid
 and p.lastname = prospect_prior.lastname
@@ -63,7 +63,7 @@ AND p.networth = prospect_prior.networth
 batchdate as (
   select sk_dateid
   from master.dimdate
-  where datevalue = (select batchdate from staging.batchdate)
+  where datevalue = (select batchdate from processing.batchdate)
 )
 
 	select
@@ -105,6 +105,6 @@ batchdate as (
                 CASE WHEN p.numbercars > 3 OR p.numbercreditcards > 7 THEN 'Spender' END,
                 CASE WHEN p.age < 25 AND p.networth > 1000000 THEN 'Inherited' END
             ), '')
-	from staging.prospect p
+	from processing.prospect p
 RETURNING *)
 select count(*) into inserted_row_counts from inserted_rows;

@@ -4,8 +4,8 @@ insert into master.factwatches
 		TRIM(w1.w_s_symb) as w_s_symb, 
 		w1.w_dts::date as dateplaced, 
 		w2.w_dts::date as dateremoved
-		from staging.watchhistory_b2 w1,
-			staging.watchhistory_b2 w2
+		from processing.watchhistory_b2 w1,
+			processing.watchhistory_b2 w2
 		where w1.w_c_id = w2.w_c_id
 		and w1.w_s_symb = w2.w_s_symb
 		and w1.w_action = 'ACTV'

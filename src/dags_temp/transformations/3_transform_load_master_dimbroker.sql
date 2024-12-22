@@ -15,5 +15,5 @@ insert into master.dimbroker
 	1 as batchid,
 	(select min(datevalue) FROM master.dimdate) as effectivedate,
 	'9999-12-31'::date as enddate
-	from staging.hr
+	from processing.hr
 	where employeejobcode = 314;

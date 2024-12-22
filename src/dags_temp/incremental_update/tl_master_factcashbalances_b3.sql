@@ -5,12 +5,12 @@ with agg as (
         a.sk_accountid as sk_accountid,
         d.sk_dateid as sk_dateid,
         sum(ct_amt) as ct_amt_day
-    from staging.cashtransaction_b2 c,
+    from processing.cashtransaction_b2 c,
         master.dimaccount a,  -- TODO: Check if we should update the dimaccount before
         master.dimdate d
     where c.ct_ca_id = a.accountid
         and a.iscurrent= True
-        and TO_DATE(d.sk_dateid::text, 'YYYYMMDD')= (SELECT batchdate from staging.batchdate)
+        and TO_DATE(d.sk_dateid::text, 'YYYYMMDD')= (SELECT batchdate from processing.batchdate)
     group by
         a.sk_customerid,
         a.sk_accountid,

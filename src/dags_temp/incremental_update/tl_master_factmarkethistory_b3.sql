@@ -9,7 +9,7 @@ insert into master.factmarkethistory
 		, dm.dm_low
 		, dm.dm_vol
 		, dd.sk_dateid
-		from staging.dailymarket_b2 dm
+		from processing.dailymarket_b2 dm
 		inner join master.dimdate dd 
 			on dm.dm_date = dd.datevalue
 		order by

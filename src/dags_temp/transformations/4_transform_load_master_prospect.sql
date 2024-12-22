@@ -5,7 +5,7 @@ insert into master.prospect
 		select
 		dd.sk_dateid
 		from master.dimdate dd
-		inner join staging.batchdate bd
+		inner join processing.batchdate bd
 			on dd.datevalue = bd.batchdate
 	)
 
@@ -77,5 +77,5 @@ insert into master.prospect
 		else ''
 	  end
 	  , '+'), '')
-	from staging.prospect p
+	from processing.prospect p
 	cross join date_record_id dri;

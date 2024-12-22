@@ -14,15 +14,15 @@ insert into master.dimsecurity
 		left(firsttradeexchg, 8)::date,
 		dividend::numeric(10,2),
 		case 
-			when lead( (select batchdate from staging.batchdate) ) over ( partition by symbol order by pts asc ) is null 
+			when lead( (select batchdate from processing.batchdate) ) over ( partition by symbol order by pts asc ) is null 
 			then true 
 			else false 
 			end as iscurrent,
 		1 as batchid,
 		left(f.pts, 8)::date,
 		'9999-12-31'::date as enddate 
-	from staging.finwire_sec f,
-		staging.statustype s,
+	from processing.finwire_sec f,
+		master.statustype s,
 		master.dimcompany c
 	where f.status = s.st_id
 	and ((ltrim(f.conameorcik, '0') = c.companyid::varchar) 

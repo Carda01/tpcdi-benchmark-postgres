@@ -16,7 +16,7 @@ insert into master.financial
 		liability::numeric as fi_liability,
 		shout::numeric as fi_out_basic,
 		dilutedshout::numeric as fi_out_dilut
-	from staging.finwire_fin f,
+	from processing.finwire_fin f,
 		master.dimcompany c
 	where ((f.conameorcik = c.companyid::varchar) 
 		or (f.conameorcik = c.name))

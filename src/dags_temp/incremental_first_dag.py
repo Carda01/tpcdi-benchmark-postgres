@@ -34,24 +34,24 @@ dag_incr = DAG(
     catchup = False
 )
 
-create_schema_staging = PostgresOperator(
-    task_id = "create_schema_staging",
+create_schema_processing = PostgresOperator(
+    task_id = "create_schema_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "incremental_update/create_schema_staging.sql",
+    sql = "incremental_update/create_schema_processing.sql",
     dag = dag_incr
 )
 
-truncate_staging = PostgresOperator(
-    task_id = "truncate_staging",
+truncate_processing = PostgresOperator(
+    task_id = "truncate_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "incremental_update/truncate_staging.sql",
+    sql = "incremental_update/truncate_processing.sql",
     dag = dag_incr
 )
 
-load_staging = PostgresOperator(
-    task_id = "load_staging",
+load_processing = PostgresOperator(
+    task_id = "load_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "incremental_update/load_staging.sql",
+    sql = "incremental_update/load_processing.sql",
     dag = dag_incr
 )
 
@@ -124,17 +124,17 @@ update_prospect = PostgresOperator(
     dag = dag_incr
 )"""
 """
-truncate_staging_b3 = PostgresOperator(
-    task_id = "truncate_staging_b3",
+truncate_processing_b3 = PostgresOperator(
+    task_id = "truncate_processing_b3",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "incremental_update/truncate_staging.sql",
+    sql = "incremental_update/truncate_processing.sql",
     dag = dag_incr
 )
 
-load_staging_b3 = PostgresOperator(
-    task_id = "load_staging_b3",
+load_processing_b3 = PostgresOperator(
+    task_id = "load_processing_b3",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "incremental_update/load_staging_b3.sql",
+    sql = "incremental_update/load_processing_b3.sql",
     dag = dag_incr
 )
 
@@ -208,23 +208,23 @@ update_prospect_b3 = PostgresOperator(
 )"""
 
 
-create_schema_staging >> truncate_staging
-truncate_staging >> load_staging
-load_staging >> tl_master_dimcustomer >> tl_master_dimaccount >> tl_master_dimtrade
+create_schema_processing >> truncate_processing
+truncate_processing >> load_processing
+load_processing >> tl_master_dimcustomer >> tl_master_dimaccount >> tl_master_dimtrade
 tl_master_dimtrade >> tl_master_factholdings #>> finish_incremental_update_b2
 tl_master_dimtrade >> tl_master_factmarkethistory #>> finish_incremental_update_b2
 tl_master_dimtrade >> tl_master_factwatches #>> finish_incremental_update_b2
 tl_master_dimtrade >> tl_master_factcashbalances #>> finish_incremental_update_b2
-load_staging >> prospect >> update_prospect #>> finish_incremental_update_b2
+load_processing >> prospect >> update_prospect #>> finish_incremental_update_b2
 
-#finish_incremental_update_b2 >> truncate_staging_b3
+#finish_incremental_update_b2 >> truncate_processing_b3
 """
-truncate_staging_b3 >> load_staging_b3
-load_staging_b3 >> tl_master_dimcustomer_b3 >> tl_master_dimaccount_b3 >> tl_master_dimtrade_b3
+truncate_processing_b3 >> load_processing_b3
+load_processing_b3 >> tl_master_dimcustomer_b3 >> tl_master_dimaccount_b3 >> tl_master_dimtrade_b3
 tl_master_dimtrade_b3 >> tl_master_factholdings_b3 #>> finish_incremental_update_b3
 tl_master_dimtrade_b3 >> tl_master_factmarkethistory_b3 #>> finish_incremental_update_b3
 tl_master_dimtrade_b3 >> tl_master_factwatches_b3 #>> finish_incremental_update_b3
 tl_master_dimtrade_b3 >> tl_master_factcashbalances_b3 #>> finish_incremental_update_b3
 
-load_staging_b3 >> prospect_b3 >> update_prospect_b3 #>> finish_incremental_update_b3
+load_processing_b3 >> prospect_b3 >> update_prospect_b3 #>> finish_incremental_update_b3
 """

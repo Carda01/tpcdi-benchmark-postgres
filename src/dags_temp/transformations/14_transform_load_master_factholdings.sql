@@ -13,6 +13,6 @@ insert into master.factholdings
 	t.tradeprice as currentprice,
 	h.hh_after_qty as currentholding,
 	1 as batchid
-	from staging.holdinghistory h,
+	from processing.holdinghistory h,
 		master.dimtrade t
 	where h.hh_t_id = t.tradeid;

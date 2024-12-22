@@ -1,17 +1,17 @@
-truncate table staging.finwire_cmp;
-truncate table staging.finwire_sec;
-truncate table staging.finwire_fin;
+truncate table processing.finwire_cmp;
+truncate table processing.finwire_sec;
+truncate table processing.finwire_fin;
 
-CREATE OR REPLACE FUNCTION staging_finwire_split() 
+CREATE OR REPLACE FUNCTION processing_finwire_split() 
   RETURNS VOID 
 AS
 $$
 DECLARE 
    x varchar := '';
 BEGIN
-    FOR x in SELECT * FROM staging.finwire LOOP
+    FOR x in SELECT * FROM processing.finwire LOOP
 		if substring(x,16,3) = 'CMP' then
-			insert into staging.finwire_cmp 
+			insert into processing.finwire_cmp 
 				select 
 					nullif(trim(both from substring(x,1,15)), '') as pts,
 					nullif(trim(both from substring(x,16,3)), '') as rectype,
@@ -29,9 +29,9 @@ BEGIN
 					nullif(trim(both from substring(x,324,24)), '') as country,
 					nullif(trim(both from substring(x,348,46)), '') as ceoname,
 					nullif(trim(both from substring(x,394,150)), '') as description						
-				from staging.finwire limit 1;
+				from processing.finwire limit 1;
 		elsif substring(x,16,3) = 'SEC' then
-			insert into staging.finwire_sec 
+			insert into processing.finwire_sec 
 				select 
 					nullif(trim(both from substring(x,1,15)), '') as pts,
 					nullif(trim(both from substring(x,16,3)), '') as rectype,
@@ -45,9 +45,9 @@ BEGIN
 					nullif(trim(both from substring(x,141,8)), '') as firsttradeexchg,
 					nullif(trim(both from substring(x,149,12)), '') as dividend,
 					nullif(trim(both from substring(x,161,60)), '') as conameorcik						
-				from staging.finwire limit 1;
+				from processing.finwire limit 1;
 		elsif substring(x,16,3) = 'FIN' then
-			insert into staging.finwire_fin 
+			insert into processing.finwire_fin 
 				select 
 					nullif(trim(both from substring(x,1,15)), '') as pts,
 					nullif(trim(both from substring(x,16,3)), '') as rectype,
@@ -66,11 +66,11 @@ BEGIN
 					nullif(trim(both from substring(x,161,13)), '') as shout,
 					nullif(trim(both from substring(x,174,13)), '') as dilutedshout,
 					nullif(trim(both from substring(x,187,60)), '') as conameorcik
-				from staging.finwire limit 1;
+				from processing.finwire limit 1;
 		end if;
     END LOOP;
 END;
 $$ 
 LANGUAGE plpgsql;
 
-SELECT staging_finwire_split() as output;
+SELECT processing_finwire_split() as output;
