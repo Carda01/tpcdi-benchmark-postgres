@@ -4,5 +4,5 @@ data/
 logs/
 .env
 dags/
-plugins/
+__pycache__
 .ipynb_checkpoints/
