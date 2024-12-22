@@ -6,7 +6,7 @@ from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.decorators import task
-from customermgmt_conversion_sfINPUT_SF import customermgmt_convert
+from customermgmt_conversion import customermgmt_convert
 
 SF=INPUT_SF
 
@@ -67,6 +67,7 @@ parse_finwire = PostgresOperator(
 convert_customermgmt_xml_to_csv = PythonOperator(
     task_id = "convert_customermgmt_xml_to_csv",
     python_callable = customermgmt_convert,
+    op_kwargs = {'SF': SF}
     dag = dag_psql,
 )
 
