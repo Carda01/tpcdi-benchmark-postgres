@@ -24,10 +24,11 @@ default_args = {
 
 # Create dag
 dag_incr = DAG(
-    dag_id = "incremental_second_upload_sf_"+str(SF),
+    dag_id = f"incremental_second_upload_sf_{SF}",
     default_args = default_args,	
+    tags = ["tpcdi"],
+    description = 'Incremental Second Upload',
     #dagrun_timeout = timedelta(minutes=60),
-    #description = 'TPC-DI project',
     #schedule = None,
     schedule_interval = None,
     catchup = False
@@ -36,84 +37,84 @@ dag_incr = DAG(
 """
 create_schema_staging = PostgresOperator(
     task_id = "create_schema_staging",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/create_schema_staging.sql",
     dag = dag_incr
 )
 
 truncate_staging = PostgresOperator(
     task_id = "truncate_staging",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/truncate_staging.sql",
     dag = dag_incr
 )
 
 load_staging = PostgresOperator(
     task_id = "load_staging",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/load_staging.sql",
     dag = dag_incr
 )
 
 tl_master_dimtrade = PostgresOperator(
     task_id = "tl_master_dimtrade",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_dimtrade.sql",
     dag = dag_incr
 )
 
 tl_master_dimaccount = PostgresOperator(
     task_id = "tl_master_dimaccount",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_dimaccount.sql",
     dag = dag_incr
 )
 
 tl_master_dimcustomer = PostgresOperator(
     task_id = "tl_master_dimcustomer",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_dimcustomer.sql",
     dag = dag_incr
 )
 
 tl_master_factcashbalances = PostgresOperator(
     task_id = "tl_master_factcashbalances",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factcashbalances.sql",
     dag = dag_incr
 )
 
 tl_master_factholdings = PostgresOperator(
     task_id = "tl_master_factholdings",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factholdings.sql",
     dag = dag_incr
 )
 
 tl_master_factmarkethistory = PostgresOperator(
     task_id = "tl_master_factmarkethistory",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factmarkethistory.sql",
     dag = dag_incr
 )
 
 tl_master_factwatches = PostgresOperator(
     task_id = "tl_master_factwatches",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factwatches.sql",
     dag = dag_incr
 )
 
 prospect = PostgresOperator(
     task_id = "prospect",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/prospect.sql",
     dag = dag_incr
 )
 
 update_prospect = PostgresOperator(
     task_id = "update_prospect",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/update_prospect.sql",
     dag = dag_incr
 )
@@ -126,77 +127,77 @@ update_prospect = PostgresOperator(
 
 truncate_staging_b3 = PostgresOperator(
     task_id = "truncate_staging_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/truncate_staging.sql",
     dag = dag_incr
 )
 
 load_staging_b3 = PostgresOperator(
     task_id = "load_staging_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/load_staging_b3.sql",
     dag = dag_incr
 )
 
 tl_master_dimtrade_b3 = PostgresOperator(
     task_id = "tl_master_dimtrade_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_dimtrade_b3.sql",
     dag = dag_incr
 )
 
 tl_master_dimaccount_b3 = PostgresOperator(
     task_id = "tl_master_dimaccount_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_dimaccount_b3.sql",
     dag = dag_incr
 )
 
 tl_master_dimcustomer_b3 = PostgresOperator(
     task_id = "tl_master_dimcustomer_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_dimcustomer_b3.sql",
     dag = dag_incr
 )
 
 tl_master_factcashbalances_b3 = PostgresOperator(
     task_id = "tl_master_factcashbalances_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factcashbalances_b3.sql",
     dag = dag_incr
 )
 
 tl_master_factholdings_b3 = PostgresOperator(
     task_id = "tl_master_factholdings_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factholdings_b3.sql",
     dag = dag_incr
 )
 
 tl_master_factmarkethistory_b3 = PostgresOperator(
     task_id = "tl_master_factmarkethistory_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factmarkethistory_b3.sql",
     dag = dag_incr
 )
 
 tl_master_factwatches_b3 = PostgresOperator(
     task_id = "tl_master_factwatches_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/tl_master_factwatches_b3.sql",
     dag = dag_incr
 )
 
 prospect_b3 = PostgresOperator(
     task_id = "prospect_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/prospect_b3.sql",
     dag = dag_incr
 )
 
 update_prospect_b3 = PostgresOperator(
     task_id = "update_prospect_b3",
-    postgres_conn_id = "postgres_"+str(SF),
+    postgres_conn_id = f"postgres_{SF}",
     sql = "incremental_update/update_prospect.sql",
     dag = dag_incr
 )
