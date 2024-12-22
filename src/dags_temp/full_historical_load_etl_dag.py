@@ -67,8 +67,8 @@ parse_finwire = PostgresOperator(
 convert_customermgmt_xml_to_csv = PythonOperator(
     task_id = "convert_customermgmt_xml_to_csv",
     python_callable = customermgmt_convert,
-    op_kwargs = {'SF': SF}
-    dag = dag_psql,
+    op_kwargs = {'SF': SF},
+    dag = dag_psql
 )
 
 # Task6 - Load customer management source to staging
