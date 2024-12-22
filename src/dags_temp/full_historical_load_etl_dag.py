@@ -99,7 +99,7 @@ load_directly_master_tables = PostgresOperator(
 transform_load_master_dimcompany = PostgresOperator(
     task_id = "transform_load_master_dimcompany",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/7_transform_load_master_dimcompany.sql",
+    sql = "/transformations/1_transform_load_master_dimcompany.sql",
 	dag = dag_psql
 )
 
@@ -107,7 +107,7 @@ transform_load_master_dimcompany = PostgresOperator(
 load_master_dimessages_dimcompany = PostgresOperator(
     task_id = "load_master_dimessages_dimcompany",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/8_load_master_dimessages_dimcompany.sql",
+    sql = "/transformations/2_load_master_dimessages_dimcompany.sql",
 	dag = dag_psql
 )
 
@@ -115,7 +115,7 @@ load_master_dimessages_dimcompany = PostgresOperator(
 transform_load_master_dimbroker = PostgresOperator(
     task_id = "transform_load_master_dimbroker",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/9_transform_load_master_dimbroker.sql",
+    sql = "/transformations/3_transform_load_master_dimbroker.sql",
 	dag = dag_psql
 )
 
@@ -123,7 +123,7 @@ transform_load_master_dimbroker = PostgresOperator(
 transform_load_master_prospect = PostgresOperator(
     task_id = "transform_load_master_prospect",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/10_transform_load_master_prospect.sql",
+    sql = "/transformations/4_transform_load_master_prospect.sql",
 	dag = dag_psql
 )
 
@@ -131,7 +131,7 @@ transform_load_master_prospect = PostgresOperator(
 transform_load_master_dimcustomer = PostgresOperator(
     task_id = "transform_load_master_dimcustomer",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/11_transform_load_master_dimcustomer.sql",
+    sql = "/transformations/5_transform_load_master_dimcustomer.sql",
 	dag = dag_psql
 )
 
@@ -139,7 +139,7 @@ transform_load_master_dimcustomer = PostgresOperator(
 load_master_dimessages_dimcustomer = PostgresOperator(
     task_id = "load_master_dimessages_dimcustomer",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/12_load_master_dimessages_dimcustomer.sql",
+    sql = "/transformations/6_load_master_dimessages_dimcustomer.sql",
 	dag = dag_psql
 )
 
@@ -147,7 +147,7 @@ load_master_dimessages_dimcustomer = PostgresOperator(
 update_master_prospect = PostgresOperator(
     task_id = "update_master_prospect",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/13_update_master_prospect.sql",
+    sql = "/transformations/7_update_master_prospect.sql",
 	dag = dag_psql
 )
 
@@ -155,7 +155,7 @@ update_master_prospect = PostgresOperator(
 transform_load_master_dimaccount = PostgresOperator(
     task_id = "transform_load_master_dimaccount",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/14_transform_load_master_dimaccount.sql",
+    sql = "/transformations/8_transform_load_master_dimaccount.sql",
 	dag = dag_psql
 )
 
@@ -163,7 +163,7 @@ transform_load_master_dimaccount = PostgresOperator(
 transform_load_master_dimsecurity = PostgresOperator(
     task_id = "transform_load_master_dimsecurity",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/15_transform_load_master_dimsecurity.sql",
+    sql = "/transformations/9_transform_load_master_dimsecurity.sql",
 	dag = dag_psql
 )
 
@@ -171,7 +171,7 @@ transform_load_master_dimsecurity = PostgresOperator(
 transform_load_master_dimtrade = PostgresOperator(
     task_id = "transform_load_master_dimtrade",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/16_transform_load_master_dimtrade.sql",
+    sql = "/transformations/10_transform_load_master_dimtrade.sql",
 	dag = dag_psql
 )
 
@@ -179,7 +179,7 @@ transform_load_master_dimtrade = PostgresOperator(
 load_master_dimessages_dimtrade = PostgresOperator(
     task_id = "load_master_dimessages_dimtrade",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/17_load_master_dimessages_dimtrade.sql",
+    sql = "/transformations/11_load_master_dimessages_dimtrade.sql",
 	dag = dag_psql
 )
 
@@ -187,7 +187,7 @@ load_master_dimessages_dimtrade = PostgresOperator(
 transform_load_master_financial = PostgresOperator(
     task_id = "transform_load_master_financial",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/18_transform_load_master_financial.sql",
+    sql = "/transformations/12_transform_load_master_financial.sql",
 	dag = dag_psql
 )
 
@@ -195,7 +195,7 @@ transform_load_master_financial = PostgresOperator(
 transform_load_master_factcashbalances = PostgresOperator(
     task_id = "transform_load_master_factcashbalances",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/19_transform_load_master_factcashbalances.sql",
+    sql = "/transformations/13_transform_load_master_factcashbalances.sql",
 	dag = dag_psql
 )
 
@@ -203,7 +203,7 @@ transform_load_master_factcashbalances = PostgresOperator(
 transform_load_master_factholdings = PostgresOperator(
     task_id = "transform_load_master_factholdings",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/20_transform_load_master_factholdings.sql",
+    sql = "/transformations/14_transform_load_master_factholdings.sql",
 	dag = dag_psql
 )
 
@@ -211,7 +211,7 @@ transform_load_master_factholdings = PostgresOperator(
 transform_load_master_factwatches = PostgresOperator(
     task_id = "transform_load_master_factwatches",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/21_transform_load_master_factwatches.sql",
+    sql = "/transformations/15_transform_load_master_factwatches.sql",
 	dag = dag_psql
 )
 
@@ -219,7 +219,7 @@ transform_load_master_factwatches = PostgresOperator(
 transform_load_master_factmarkethistory = PostgresOperator(
     task_id = "transform_load_master_factmarkethistory",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/22_transform_load_master_factmarkethistory.sql",
+    sql = "/transformations/16_transform_load_master_factmarkethistory.sql",
 	dag = dag_psql
 )
 
@@ -227,7 +227,7 @@ transform_load_master_factmarkethistory = PostgresOperator(
 load_master_dimessages_factmarkethistory = PostgresOperator(
     task_id = "load_master_dimessages_factmarkethistory",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "/transformations/23_load_master_dimessages_factmarkethistory.sql",
+    sql = "/transformations/17_load_master_dimessages_factmarkethistory.sql",
 	dag = dag_psql
 )
 
