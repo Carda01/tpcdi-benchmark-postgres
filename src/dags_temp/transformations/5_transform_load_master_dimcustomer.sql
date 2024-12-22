@@ -77,8 +77,8 @@ insert into master.dimcustomer
 		, cm.actionts::date as effectivedate
 		, '9999-12-31'::date as enddate
 		, cm.actiontype
-		from staging.customermgmt cm
-		cross join staging.batchdate bd
+		from processing.customermgmt cm
+		cross join processing.batchdate bd
 		left join master.taxrate ntr
 			on cm.c_nat_tx_id = ntr.tx_id
 		left join master.taxrate ltr

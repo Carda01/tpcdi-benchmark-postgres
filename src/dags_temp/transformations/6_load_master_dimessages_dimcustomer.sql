@@ -19,5 +19,5 @@ insert into master.dimessages
 	, 'Alert'
 	, 'C_ID = ' || customerid || ', C_DOB = ' || dob
 	from master.dimcustomer
-	where dob < (select * from staging.batchdate) - interval '100 years'
-	or dob > (select * from staging.batchdate);
+	where dob < (select * from processing.batchdate) - interval '100 years'
+	or dob > (select * from processing.batchdate);

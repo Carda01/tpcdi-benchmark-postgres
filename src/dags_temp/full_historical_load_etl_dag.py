@@ -31,27 +31,27 @@ dag_psql = DAG(
     # catchup = False
 )
 
-# Task1 - Create staging schema
-create_staging_schema = PostgresOperator(
-    task_id = "create_staging_schema",
+# Task1 - Create processing schema
+create_processing_schema = PostgresOperator(
+    task_id = "create_processing_schema",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "create_staging_schema.sql",
+    sql = "create_processing_schema.sql",
 	dag = dag_psql
 )
 
-# Task2 - Load txt and csv sources to staging
-load_txt_csv_sources_to_staging = PostgresOperator(
-    task_id = "load_txt_csv_sources_to_staging",
+# Task2 - Load txt and csv sources to processing
+load_txt_csv_sources_to_processing = PostgresOperator(
+    task_id = "load_txt_csv_sources_to_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "staging_data_commands.sql",
+    sql = "processing_data_commands.sql",
 	dag = dag_psql
 )
 
-# Task3 - Load finwire source to staging
-load_finwire_to_staging = PostgresOperator(
-    task_id = "load_finwire_to_staging",
+# Task3 - Load finwire source to processing
+load_finwire_to_processing = PostgresOperator(
+    task_id = "load_finwire_to_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "staging_finwire_load1.sql",
+    sql = "processing_finwire_load1.sql",
 	dag = dag_psql
 )
 
@@ -59,7 +59,7 @@ load_finwire_to_staging = PostgresOperator(
 parse_finwire = PostgresOperator(
     task_id = "parse_finwire",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "load_staging_finwire_db.sql",
+    sql = "load_processing_finwire_db.sql",
 	dag = dag_psql
 )
 
@@ -71,11 +71,11 @@ convert_customermgmt_xml_to_csv = PythonOperator(
     dag = dag_psql
 )
 
-# Task6 - Load customer management source to staging
-load_customer_mgmt_to_staging = PostgresOperator(
-    task_id = "load_customer_mgmt_to_staging",
+# Task6 - Load customer management source to processing
+load_customer_mgmt_to_processing = PostgresOperator(
+    task_id = "load_customer_mgmt_to_processing",
     postgres_conn_id = f"postgres_{SF}",
-    sql = "load_staging_customermgmt_db.sql",
+    sql = "load_processing_customermgmt_db.sql",
 	dag = dag_psql
 )
 
@@ -235,14 +235,14 @@ load_master_dimessages_factmarkethistory = PostgresOperator(
 # Task Dependencies
 
 # Staging schema dependency
-create_staging_schema >> load_txt_csv_sources_to_staging
-create_staging_schema >> load_finwire_to_staging >> parse_finwire
-create_staging_schema >> convert_customermgmt_xml_to_csv >> load_customer_mgmt_to_staging
+create_processing_schema >> load_txt_csv_sources_to_processing
+create_processing_schema >> load_finwire_to_processing >> parse_finwire
+create_processing_schema >> convert_customermgmt_xml_to_csv >> load_customer_mgmt_to_processing
 
 # Master schema dependency
-load_txt_csv_sources_to_staging >> create_master_schema
+load_txt_csv_sources_to_processing >> create_master_schema
 parse_finwire >> create_master_schema
-load_customer_mgmt_to_staging >> create_master_schema
+load_customer_mgmt_to_processing >> create_master_schema
 
 # Transformation/Loading to master dependency
 create_master_schema >> load_directly_master_tables

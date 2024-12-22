@@ -28,12 +28,12 @@ insert into master.dimcompany
 	country, 
 	description, 
 	foundingdate::date,
-	case when lead( (select batchdate from staging.batchdate) ) over ( partition by cik order by pts asc ) is null then true else false end as iscurrent,
+	case when lead( (select batchdate from processing.batchdate) ) over ( partition by cik order by pts asc ) is null then true else false end as iscurrent,
 	1 as batchid,
 	left(f.pts, 8)::date as effectivedate,
 	'9999-12-31'::date as enddate 
 	from 
-		staging.finwire_cmp f, 
+		processing.finwire_cmp f, 
 		master.statustype s,
 		master.industry i
 	where 

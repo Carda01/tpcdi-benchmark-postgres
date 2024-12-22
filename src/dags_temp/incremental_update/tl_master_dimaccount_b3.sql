@@ -2,7 +2,7 @@
 UPDATE master.dimaccount prev_acc SET
 	iscurrent = false,
 	enddate = b.batchdate
-FROM staging.batchdate b, staging.account post_acc
+FROM processing.batchdate b, processing.account post_acc
 WHERE post_acc.CDC_FLAG = 'U' and post_acc.CA_ID = prev_acc.accountid and prev_acc.iscurrent = true;
 
 
@@ -26,7 +26,7 @@ with sk_account as (
 			3 as batchid,
 			batchdate as effectivedate,
 			'9999-12-31'::date as enddate
-	FROM staging.account, master.statustype, master.dimbroker, master.dimcustomer, staging.batchdate, sk_account
+	FROM processing.account, master.statustype, master.dimbroker, master.dimcustomer, processing.batchdate, sk_account
 	WHERE CA_ST_ID = ST_ID and master.dimbroker.BrokerID = CA_B_ID and master.dimbroker.IsCurrent
 	and master.dimcustomer.CustomerID = CA_C_ID and master.dimcustomer.IsCurrent
 )

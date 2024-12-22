@@ -1,5 +1,5 @@
-drop table if exists staging.cashtransaction_b2;
-create table staging.cashtransaction_b2 (
+drop table if exists processing.cashtransaction_b2;
+create table processing.cashtransaction_b2 (
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
 	ct_ca_id numeric(11) not null check(ct_ca_id >= 0),
@@ -8,8 +8,8 @@ create table staging.cashtransaction_b2 (
 	ct_name char(100) not null
 );
 
-drop table if exists staging.dailymarket_b2;
-create table staging.dailymarket_b2(
+drop table if exists processing.dailymarket_b2;
+create table processing.dailymarket_b2(
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
 	dm_date date not null,
@@ -20,8 +20,8 @@ create table staging.dailymarket_b2(
 	dm_vol numeric(12) not null check(dm_vol >= 0)
 );
 
-drop table if exists staging.holdinghistory_b2;
-create table staging.holdinghistory_b2(
+drop table if exists processing.holdinghistory_b2;
+create table processing.holdinghistory_b2(
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
 	hh_h_t_id numeric(15) not null check(hh_h_t_id >= 0),
@@ -30,8 +30,8 @@ create table staging.holdinghistory_b2(
 	hh_after_qty numeric(6) not null check(hh_after_qty >= 0)
 );
 
-drop table if exists staging.watchhistory_b2;
-create table staging.watchhistory_b2(
+drop table if exists processing.watchhistory_b2;
+create table processing.watchhistory_b2(
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
 	w_c_id numeric(11) not null check(w_c_id >= 0),
@@ -40,8 +40,8 @@ create table staging.watchhistory_b2(
 	w_action char(4) check(w_action in ('ACTV', 'CNCL'))
 );
 
-drop table if exists staging.trade_b2;
-create table staging.trade_b2(
+drop table if exists processing.trade_b2;
+create table processing.trade_b2(
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
 	t_id numeric(15) not null check(t_id >= 0),
@@ -60,8 +60,8 @@ create table staging.trade_b2(
 	t_tax numeric(10,2) check((t_st_id = 'CMPT' and t_tax >= 0) or (t_st_id != 'CMPT' and t_tax is null))
 );
 
-drop table if exists staging.customer;
-create table staging.customer(
+drop table if exists processing.customer;
+create table processing.customer(
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
 	c_id numeric(15) not null,
@@ -97,8 +97,8 @@ create table staging.customer(
     c_nat_tx_id char(4) not null
 );
 
-drop table if exists staging.account;
-create table staging.account(
+drop table if exists processing.account;
+create table processing.account(
     cdc_flag char(1),
     cdc_dsn numeric(12) not null,
     ca_id numeric(15) not null,

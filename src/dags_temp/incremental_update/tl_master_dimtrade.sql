@@ -31,7 +31,7 @@ SELECT
   , 2 AS batchid
 FROM (
     SELECT *
-    FROM (SELECT * FROM staging.trade_b2 WHERE cdc_flag = 'I') tb2
+    FROM (SELECT * FROM processing.trade_b2 WHERE cdc_flag = 'I') tb2
     INNER JOIN master.statustype st ON (tb2.t_st_id = st.st_id)  -- "StatusType is a static table: It is loaded from a file once in the Historical Load and not modified again."
     INNER JOIN master.tradetype tt ON (tb2.t_tt_id = tt.tt_id) -- "TradeType is a static table: It is loaded from a file once in the Historical Load and not modified again."
     INNER JOIN (SELECT * FROM master.dimsecurity WHERE iscurrent) ds ON (tb2.t_s_symb = ds.symbol) -- "No changes to DimSecurity will occur during Incremental Updates."
@@ -68,7 +68,7 @@ SET sk_closedateid = case when t.t_st_id in ('CMPT', 'CNCL') then to_char(t.t_dt
   , batchid = 2
 FROM (
     SELECT *
-    FROM (SELECT * FROM staging.trade_b2 WHERE cdc_flag = 'U') tb2
+    FROM (SELECT * FROM processing.trade_b2 WHERE cdc_flag = 'U') tb2
     INNER JOIN master.statustype st ON (tb2.t_st_id = st.st_id)  -- "StatusType is a static table: It is loaded from a file once in the Historical Load and not modified again."
     INNER JOIN master.tradetype tt ON (tb2.t_tt_id = tt.tt_id) -- "TradeType is a static table: It is loaded from a file once in the Historical Load and not modified again."
     INNER JOIN (SELECT * FROM master.dimsecurity WHERE iscurrent) ds ON (tb2.t_s_symb = ds.symbol) -- "No changes to DimSecurity will occur during Incremental Updates."

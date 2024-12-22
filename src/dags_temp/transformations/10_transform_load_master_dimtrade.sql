@@ -45,8 +45,8 @@ insert into master.dimtrade
 		, t.t_tax
 		, 1 as batchid
 		, row_number() over(partition by t.t_id order by th.th_dts desc) as rn
-		from staging.trade t
-		inner join staging.tradehistory th
+		from processing.trade t
+		inner join processing.tradehistory th
 			on t.t_id = th.th_t_id
 		inner join master.dimaccount a
 			on t.t_ca_id = a.accountid

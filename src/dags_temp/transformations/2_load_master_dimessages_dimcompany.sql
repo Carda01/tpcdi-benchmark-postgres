@@ -8,5 +8,5 @@ insert into master.dimessages
 	'Invalid SPRating' as messagetext,
 	'Alert' as messagetype,
 	'CO_ID = ' || cik::varchar || ', CO_SP_RATE = ' || sprating::varchar
-	from staging.finwire_cmp
+	from processing.finwire_cmp
 	where sprating not in ('AAA','AA','AA+','AA-','A','A+','A-','BBB','BBB+','BBB-','BB','BB+','BB-','B','B+','B-','CCC','CCC+','CCC-','CC','C','D');
