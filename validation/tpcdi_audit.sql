@@ -312,7 +312,7 @@ select 'DimCustomer distinct keys', NULL, case when
 	(select count(distinct SK_CustomerID) from master.DimCustomer) =
 	(select count(*) from master.DimCustomer)
 then 'OK' else 'Not unique' end, 'All SKs are distinct'
- -- FROM DUMMY TABLE
+
 
 -- Three tests together check for validity of the EffectiveDate and EndDate handling:
 --   'DimCustomer EndDate' checks that effective and end dates line up
@@ -325,7 +325,7 @@ select 'DimCustomer EndDate', NULL, case when
 	(select count(*) from master.DimCustomer a join master.DimCustomer b on a.CustomerID = b.CustomerID and a.EndDate = b.EffectiveDate) +
 	(select count(*) from master.DimCustomer where EndDate = '9999-12-31')
 then 'OK' else 'Dates not aligned' end, 'EndDate of one record matches EffectiveDate of another, or the end of time'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer Overlap', NULL, case when (
@@ -334,27 +334,27 @@ select 'DimCustomer Overlap', NULL, case when (
 	join master.DimCustomer b on a.CustomerID = b.CustomerID and a.SK_CustomerID <> b.SK_CustomerID and a.EffectiveDate >= b.EffectiveDate and a.EffectiveDate < b.EndDate
 ) = 0
 then 'OK' else 'Dates overlap' end, 'Date ranges do not overlap for a given Customer'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer End of Time', NULL, case when
 	(select count(distinct CustomerID) from master.DimCustomer) =
 	(select count(*) from master.DimCustomer where EndDate = '9999-12-31')
 then 'OK' else 'End of time not reached' end, 'Every Customer has one record with a date range reaching the end of time'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer consolidation', NULL, case when
 	(select count(*) from master.DimCustomer where EffectiveDate = EndDate) = 0
 then 'OK' else 'Not consolidated' end, 'No records become effective and end on the same day'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer batches', NULL, case when
 	(select count(distinct BatchID) from master.DimCustomer) = 3 and
 	(select max(BatchID) from master.DimCustomer) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer IsCurrent', NULL, case when
@@ -364,7 +364,7 @@ select 'DimCustomer IsCurrent', NULL, case when
     (select count(*) from master.DimCustomer where EndDate = '9999-12-31' and IsCurrent = TRUE) +
 	(select count(*) from master.DimCustomer where EndDate < '9999-12-31' and IsCurrent = FALSE)
 then 'OK' else 'Not current' end, 'IsCurrent is 1 if EndDate is the end of time, else Iscurrent is 0'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer EffectiveDate', BatchID, Result, 'All records from a batch have an EffectiveDate in the batch time window' from (
@@ -384,7 +384,7 @@ union
 select 'DimCustomer Status', NULL, case when
 	(select count(*) from master.DimCustomer where Status not in ('Active', 'Inactive')) = 0
 then 'OK' else 'Bad value' end, 'All Status values are valid'
- -- FROM DUMMY TABLE
+
 
 
 
@@ -402,7 +402,7 @@ union
 select 'DimCustomer Gender', NULL, case when
 	(select count(*) from master.DimCustomer where Gender not in ('M', 'F', 'U')) = 0
 then 'OK' else 'Bad value' end, 'All Gender values are valid'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer age range alerts', BatchID, Result, 'Count of age range alerts matches audit table' from (
@@ -428,7 +428,7 @@ select 'DimCustomer TaxID', NULL, case when (
 	select count(*) from master.DimCustomer where TaxID not like '___-__-____'
 	) = 0
 then 'OK' else 'Mismatch' end, 'TaxID values are properly formatted'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer Phone1', NULL, case when (
@@ -440,7 +440,7 @@ select 'DimCustomer Phone1', NULL, case when (
 	  and Phone1 is not null
 	) = 0
 then 'OK' else 'Mismatch' end, 'Phone1 values are properly formatted'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer Phone2', NULL, case when (
@@ -452,7 +452,7 @@ select 'DimCustomer Phone2', NULL, case when (
 	  and Phone2 is not null
 	) = 0
 then 'OK' else 'Mismatch' end, 'Phone2 values are properly formatted'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer Phone3', NULL, case when (
@@ -464,7 +464,7 @@ select 'DimCustomer Phone3', NULL, case when (
 	  and Phone3 is not null
 	) = 0
 then 'OK' else 'Mismatch' end, 'Phone3 values are properly formatted'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer Email1', NULL, case when (
@@ -473,7 +473,7 @@ select 'DimCustomer Email1', NULL, case when (
 	  and Email1 is not null
 	) = 0
 then 'OK' else 'Mismatch' end, 'Email1 values are properly formatted'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer Email2', NULL, case when (
@@ -483,7 +483,7 @@ select 'DimCustomer Email2', NULL, case when (
 	  and Email2 is not null
 	) = 0
 then 'OK' else 'Mismatch' end, 'Email2 values are properly formatted'
- -- FROM DUMMY TABLE
+
 
 
 union
@@ -492,7 +492,7 @@ select 'DimCustomer LocalTaxRate', NULL, case when
 	(select count(*) from master.DimCustomer c join master.TaxRate t on c.LocalTaxRateDesc = t.TX_NAME and c.LocalTaxRate = t.TX_RATE) and
 	(select count(distinct LocalTaxRateDesc) from master.DimCustomer) > 300
 then 'OK' else 'Mismatch' end, 'LocalTaxRateDesc and LocalTaxRate values are from TaxRate table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer NationalTaxRate', NULL, case when
@@ -500,7 +500,7 @@ select 'DimCustomer NationalTaxRate', NULL, case when
 	(select count(*) from master.DimCustomer c join master.TaxRate t on c.NationalTaxRateDesc = t.TX_NAME and c.NationalTaxRate = t.TX_RATE) and
 	(select count(distinct NationalTaxRateDesc) from master.DimCustomer) >= 9   -- Including the inequality for now, because the generated data is not sticking to national tax rates
 then 'OK' else 'Mismatch' end, 'NationalTaxRateDesc and NationalTaxRate values are from TaxRate table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCustomer demographic fields', NULL, case when
@@ -516,7 +516,7 @@ select 'DimCustomer demographic fields', NULL, case when
 	    select count(*) from master.DimCustomer where AgencyID is not null and IsCurrent = TRUE
 	)
 then 'OK' else 'Mismatch' end, 'For current customer records that match Prospect records, the demographic fields also match'
- -- FROM DUMMY TABLE
+
 
 --
 -- Checks against the DimSecurity table.
@@ -536,7 +536,7 @@ select 'DimSecurity distinct keys', NULL, case when
 	(select count(distinct SK_SecurityID) from master.DimSecurity) =
 	(select count(*) from master.DimSecurity)
 then 'OK' else 'Not unique' end, 'All SKs are distinct'
- -- FROM DUMMY TABLE
+
 
 -- Three tests together check for validity of the EffectiveDate and EndDate handling:
 --   'DimSecurity EndDate' checks that effective and end dates line up
@@ -549,7 +549,7 @@ select 'DimSecurity EndDate', NULL, case when
 	(select count(*) from master.DimSecurity a join master.DimSecurity b on a.Symbol = b.Symbol and a.EndDate = b.EffectiveDate) +
 	(select count(*) from master.DimSecurity where EndDate = '9999-12-31')
 then 'OK' else 'Dates not aligned' end, 'EndDate of one record matches EffectiveDate of another, or the end of time'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity Overlap', NULL, case when (
@@ -558,27 +558,27 @@ select 'DimSecurity Overlap', NULL, case when (
 	join master.DimSecurity b on a.Symbol = b.Symbol and a.SK_SecurityID <> b.SK_SecurityID and a.EffectiveDate >= b.EffectiveDate and a.EffectiveDate < b.EndDate
 ) = 0
 then 'OK' else 'Dates overlap' end, 'Date ranges do not overlap for a given company'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity End of Time', NULL, case when
 	(select count(distinct Symbol) from master.DimSecurity) =
 	(select count(*) from master.DimSecurity where EndDate = '9999-12-31')
 then 'OK' else 'End of tome not reached' end, 'Every company has one record with a date range reaching the end of time'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity consolidation', NULL, case when
 	(select count(*) from master.DimSecurity where EffectiveDate = EndDate) = 0
 then 'OK' else 'Not consolidated' end, 'No records become effective and end on the same day'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity batches', NULL, case when
 	(select count(distinct BatchID) from master.DimSecurity) = 1 and
 	(select max(BatchID) from master.DimSecurity) = 1
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity IsCurrent', NULL, case when
@@ -588,7 +588,7 @@ select 'DimSecurity IsCurrent', NULL, case when
     (select count(*) from master.DimSecurity where EndDate = '9999-12-31' and IsCurrent = TRUE) +
 	(select count(*) from master.DimSecurity where EndDate < '9999-12-31' and IsCurrent = FALSE)
 then 'OK' else 'Not current' end, 'IsCurrent is 1 if EndDate is the end of time, else Iscurrent is 0'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity EffectiveDate', BatchID, Result, 'All records from a batch have an EffectiveDate in the batch time window' from (
@@ -608,7 +608,7 @@ union
 select 'DimSecurity Status', NULL, case when
 	(select count(*) from master.DimSecurity where Status not in ('Active', 'Inactive')) = 0
 then 'OK' else 'Bad value' end, 'All Status values are valid'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity SK_CompanyID', NULL, case when
@@ -616,19 +616,19 @@ select 'DimSecurity SK_CompanyID', NULL, case when
 	(select count(*) from master.DimSecurity a
 	 join master.DimCompany c on a.SK_CompanyID = c.SK_CompanyID and c.EffectiveDate <= a.EffectiveDate and a.EndDate <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_CompanyIDs match a DimCompany record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity ExchangeID', NULL, case when
 	(select count(*) from master.DimSecurity where ExchangeID not in ('NYSE', 'NASDAQ', 'AMEX', 'PCX')) = 0
 then 'OK' else 'Bad value - see ticket #65' end, 'All ExchangeID values are valid'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimSecurity Issue', NULL, case when
 	(select count(*) from master.DimSecurity where Issue not in ('COMMON', 'PREF_A', 'PREF_B', 'PREF_C', 'PREF_D')) = 0
 then 'OK' else 'Bad value - see ticket #65' end, 'All Issue values are valid'
- -- FROM DUMMY TABLE
+
 
 --
 -- Checks against the DimCompany table.
@@ -648,7 +648,7 @@ select 'DimCompany distinct keys', NULL, case when
 	(select count(distinct SK_CompanyID) from master.DimCompany) =
 	(select count(*) from master.DimCompany)
 then 'OK' else 'Not unique' end, 'All SKs are distinct'
- -- FROM DUMMY TABLE
+
 
 
 -- Three tests together check for validity of the EffectiveDate and EndDate handling:
@@ -662,7 +662,7 @@ select 'DimCompany EndDate', NULL, case when
 	(select count(*) from master.DimCompany a join master.DimCompany b on a.CompanyID = b.CompanyID and a.EndDate = b.EffectiveDate) +
 	(select count(*) from master.DimCompany where EndDate = '9999-12-31')
 then 'OK' else 'Dates not aligned' end, 'EndDate of one record matches EffectiveDate of another, or the end of time'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCompany Overlap', NULL, case when (
@@ -671,27 +671,27 @@ select 'DimCompany Overlap', NULL, case when (
 	join master.DimCompany b on a.CompanyID = b.CompanyID and a.SK_CompanyID <> b.SK_CompanyID and a.EffectiveDate >= b.EffectiveDate and a.EffectiveDate < b.EndDate
 ) = 0
 then 'OK' else 'Dates overlap' end, 'Date ranges do not overlap for a given company'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCompany End of Time', NULL, case when
 	(select count(distinct CompanyID) from master.DimCompany) =
 	(select count(*) from master.DimCompany where EndDate = '9999-12-31')
 then 'OK' else 'End of tome not reached' end, 'Every company has one record with a date range reaching the end of time'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimCompany consolidation', NULL, case when
 	(select count(*) from master.DimCompany where EffectiveDate = EndDate) = 0
 then 'OK' else 'Not consolidated' end, 'No records become effective and end on the same day'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'DimCompany batches', NULL, case when
 	(select count(distinct BatchID) from master.DimCompany) = 1 and
 	(select max(BatchID) from master.DimCompany) = 1
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'DimCompany EffectiveDate', BatchID, Result, 'All records from a batch have an EffectiveDate in the batch time window' from (
@@ -711,7 +711,7 @@ union
 select 'DimCompany Status', NULL, case when
 	(select count(*) from master.DimCompany where Status not in ('Active', 'Inactive')) = 0
 then 'OK' else 'Bad value' end, 'All Status values are valid'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'DimCompany distinct names', NULL, case when	(
@@ -720,14 +720,14 @@ select 'DimCompany distinct names', NULL, case when	(
 	join master.DimCompany b on a.Name = b.Name and a.CompanyID <> b.CompanyID
 ) = 0
 then 'OK' else 'Mismatch' end, 'Every company has a unique name'
--- FROM DUMMY TABLE
+ 
 
 union				-- Curious, there are duplicate industry names in Industry table.  Should there be?  That's why the distinct stuff...
 select 'DimCompany Industry', NULL, case when
 	(select count(*) from master.DimCompany) =
 	(select count(*) from master.DimCompany where Industry in (select distinct IN_NAME from master.Industry))
 then 'OK' else 'Bad value' end, 'Industry values are from the Industry table'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'DimCompany SPrating', NULL, case when (
@@ -736,7 +736,7 @@ select 'DimCompany SPrating', NULL, case when (
 	  and SPrating is not null
 ) = 0
 then 'OK' else 'Bad value' end, 'All SPrating values are valid'
--- FROM DUMMY TABLE
+
 
 union			-- Right now we have blank (but not null) country names.  Should there be?
 select 'DimCompany Country', NULL, case when (
@@ -745,7 +745,7 @@ select 'DimCompany Country', NULL, case when (
 	  and Country is not null
 ) = 0
 then 'OK' else 'Bad value' end, 'All Country values are valid'
--- FROM DUMMY TABLE
+
 
 --
 -- Checks against the Prospect table.
@@ -754,7 +754,7 @@ union
 select 'Prospect SK_UpdateDateID', NULL, case when
 	(select count(*) from master.Prospect where SK_RecordDateID < SK_UpdateDateID) = 0
 then 'OK' else 'Mismatch' end, 'SK_RecordDateID must be newer or same as SK_UpdateDateID'
- -- FROM DUMMY TABLE
+
 
 union
 select 'Prospect SK_RecordDateID', BatchID, Result, 'All records from batch have SK_RecordDateID in or after the batch time window' from (
@@ -776,7 +776,7 @@ select 'Prospect batches', NULL, case when
 	(select count(distinct BatchID) from master.Prospect) = 3 and
 	(select max(BatchID) from master.Prospect) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
- -- FROM DUMMY TABLE
+
 
  union
 select 'Prospect Country', NULL, case when (
@@ -785,7 +785,7 @@ select 'Prospect Country', NULL, case when (
 	  and Country is not null
 ) = 0
 then 'OK' else 'Bad value' end, 'All Country values are valid'
- -- FROM DUMMY TABLE
+
 
 union
 select 'Prospect MarketingNameplate', NULL, case when (
@@ -812,7 +812,7 @@ select 'Prospect MarketingNameplate', NULL, case when (
 	from master.Prospect
 ) = 0
 then 'OK' else 'Bad value' end, 'All MarketingNameplate values match the data'
- -- FROM DUMMY TABLE
+
 
 
 
@@ -837,7 +837,7 @@ select 'FactWatches batches', NULL, case when
 	(select count(distinct BatchID) from master.FactWatches) = 3  and
 	(select max(BatchID) from master.FactWatches) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'FactWatches active watches', BatchID, Result, 'Actual total matches Audit table' from (
@@ -858,7 +858,7 @@ select 'FactWatches SK_CustomerID', NULL, case when
 	  and (select DateValue from master.DimDate where SK_DateID = a.SK_DateID_DatePlaced) <= c.EndDate
 	  )
 then 'OK' else 'Bad join' end, 'All SK_CustomerIDs match a DimCustomer record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 union
 select 'FactWatches SK_SecurityID', NULL, case when
@@ -868,7 +868,7 @@ select 'FactWatches SK_SecurityID', NULL, case when
 	  and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID_DatePlaced)
 	  and (select DateValue from master.DimDate where SK_DateID = a.SK_DateID_DatePlaced) <= c.EndDate )
 then 'OK' else 'Bad join' end, 'All SK_SecurityIDs match a DimSecurity record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 -- union
 -- select 'FactWatches date check', BatchID, Result, 'All SK_DateID_ values are in the correct batch time window' from (
@@ -920,35 +920,35 @@ select 'DimTrade canceled trades', NULL, case when
 		(select count(*) from master.DimTrade where Status = 'Canceled')  =
 		(select sum(Value) from master.Audit where DataSet = 'DimTrade' and Attribute = 'T_CanceledTrades')
 then 'OK' else 'Mismatch' end, 'Actual row counts matches Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade commission alerts', NULL, case when
 		(select count(*) from master.DImessages where MessageType = 'Alert' and messageText = 'Invalid trade commission')  =
 		(select sum(Value) from master.Audit where DataSet = 'DimTrade' and Attribute = 'T_InvalidCommision')
 then 'OK' else 'Mismatch' end, 'Actual row counts matches Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade charge alerts', NULL, case when
 		(select count(*) from master.DImessages where MessageType = 'Alert' and messageText = 'Invalid trade fee')  =
 		(select sum(Value) from master.Audit where DataSet = 'DimTrade' and Attribute = 'T_InvalidCharge')
 then 'OK' else 'Mismatch' end, 'Actual row counts matches Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade batches', NULL, case when
 	(select count(distinct BatchID) from master.DimTrade) = 3 and
 	(select max(BatchID) from master.DimTrade) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade distinct keys', NULL, case when
 	(select count(distinct TradeID) from master.DimTrade) =
 	(select count(*) from master.DimTrade)
 then 'OK' else 'Not unique' end, 'All keys are distinct'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade SK_BrokerID', NULL, case when
@@ -956,7 +956,7 @@ select 'DimTrade SK_BrokerID', NULL, case when
 	(select count(*) from master.DimTrade a
 	 join master.DimBroker c on a.SK_BrokerID = c.SK_BrokerID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_BrokerIDs match a DimBroker record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade SK_CompanyID', NULL, case when
@@ -964,7 +964,7 @@ select 'DimTrade SK_CompanyID', NULL, case when
 	(select count(*) from master.DimTrade a
 	 join master.DimCompany c on a.SK_CompanyID = c.SK_CompanyID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_CompanyIDs match a DimCompany record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade SK_SecurityID', NULL, case when
@@ -972,7 +972,7 @@ select 'DimTrade SK_SecurityID', NULL, case when
 	(select count(*) from master.DimTrade a
 	 join master.DimSecurity c on a.SK_SecurityID = c.SK_SecurityID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_SecurityIDs match a DimSecurity record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade SK_CustomerID', NULL, case when
@@ -980,7 +980,7 @@ select 'DimTrade SK_CustomerID', NULL, case when
 	(select count(*) from master.DimTrade a
 	 join master.DimCustomer c on a.SK_CustomerID = c.SK_CustomerID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_CustomerIDs match a DimCustomer record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade SK_AccountID', NULL, case when
@@ -988,7 +988,7 @@ select 'DimTrade SK_AccountID', NULL, case when
 	(select count(*) from master.DimTrade a
 	 join master.DimAccount c on a.SK_AccountID = c.SK_AccountID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_CreateDateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_AccountIDs match a DimAccount record with a valid date range'
- -- FROM DUMMY TABLE
+
 
 -- union
 -- select 'DimTrade date check', BatchID, Result, 'All SK_DateID values are in the correct batch time window' from (
@@ -1027,7 +1027,7 @@ select 'DimTrade Status', NULL, case when (
 	where Status not in ( 'Canceled', 'Pending', 'Submitted', 'Active', 'Completed' )
 ) = 0
 then 'OK' else 'Bad value' end, 'All Trade Status values are valid'
- -- FROM DUMMY TABLE
+
 
 union
 select 'DimTrade Type', NULL, case when (
@@ -1035,7 +1035,7 @@ select 'DimTrade Type', NULL, case when (
 	where Type not in ( 'Market Buy', 'Market Sell', 'Stop Loss', 'Limit Sell', 'Limit Buy' )
 ) = 0
 then 'OK' else 'Bad value' end, 'All Trade Type values are valid'
- -- FROM DUMMY TABLE
+
 
 
 --
@@ -1044,36 +1044,30 @@ then 'OK' else 'Bad value' end, 'All Trade Type values are valid'
 
 union
 select 'Financial row count', NULL, case when
--- 		(select MessageData from master.DImessages where MessageSource = 'Financial' and MessageType = 'Validation' and MessageText = 'Row count' and BatchID = 1)  =
--- 		(select sum(Value) from master.Audit where DataSet = 'Financial' and Attribute = 'FW_FIN')
         (select MessageData from master.DImessages where MessageSource = 'Financial' and MessageType = 'Validation' and MessageText = 'Row count' and BatchID = 1)  =
 		(select sum(Value)::text from master.Audit where DataSet = 'Financial' and Attribute = 'FW_FIN')
 then 'OK' else 'Mismatch' end, 'Actual row count matches Audit table'
- -- FROM DUMMY TABLE
+
 
 union
 select 'Financial SK_CompanyID', NULL, case when
 	(select count(*) from master.Financial) =
 	(select count(*) from master.Financial a join master.DimCompany c on a.SK_CompanyID = c.SK_CompanyID )
 then 'OK' else 'Bad join' end, 'All SK_CompanyIDs match a DimCompany record'
- -- FROM DUMMY TABLE
 
 union
 select 'Financial FI_YEAR', NULL, case when (
--- 	(select count(*) from master.Financial where FI_YEAR < year((select Date from master.Audit where DataSet = 'Batch' and BatchID = 1 and Attribute = 'FirstDay'))) +
--- 	(select count(*) from master.Financial where FI_YEAR > year((select Date from master.Audit where DataSet = 'Batch' and BatchID = 1 and Attribute = 'LastDay')))
-    (select count(*) from master.Financial where FI_YEAR < date_part('year', (select Date from master.Audit where DataSet = 'Batch' and BatchID = 1 and Attribute = 'FirstDay'))) +
+	(select count(*) from master.Financial where FI_YEAR < date_part('year', (select Date from master.Audit where DataSet = 'Batch' and BatchID = 1 and Attribute = 'FirstDay'))) +
 	(select count(*) from master.Financial where FI_YEAR > date_part('year', (select Date from master.Audit where DataSet = 'Batch' and BatchID = 1 and Attribute = 'LastDay')))
 ) = 0
 then 'OK' else 'Bad Year' end, 'All Years are within Batch1 range'
- -- FROM DUMMY TABLE
 
 union
 select 'Financial FI_QTR', NULL, case when (
 	select count(*) from master.Financial where FI_QTR not in ( 1, 2, 3, 4 )
 ) = 0
 then 'OK' else 'Bad Qtr' end, 'All quarters are in ( 1, 2, 3, 4 )'
- -- FROM DUMMY TABLE
+
 
 union
 select 'Financial FI_QTR_START_DATE', NULL, case when (
@@ -1086,7 +1080,7 @@ select 'Financial FI_QTR_START_DATE', NULL, case when (
 	   or date_part('day', FI_QTR_START_DATE) <> 1
 ) = 0
 then 'OK' else 'Bad date' end, 'All quarters start on correct date'
- -- FROM DUMMY TABLE
+
 
 union
 select 'Financial EPS', NULL, case when (
@@ -1096,7 +1090,7 @@ select 'Financial EPS', NULL, case when (
 	   or  Round(FI_NET_EARN/FI_REVENUE,2) - FI_MARGIN not between -0.4 and 0.4
 ) = 0
 then 'OK' else 'Bad EPS' end, 'Earnings calculations are valid'
- -- FROM DUMMY TABLE
+
 
 
 --
@@ -1120,7 +1114,6 @@ select 'FactMarketHistory batches', NULL, case when
 	(select count(distinct BatchID) from master.FactMarketHistory) = 3 and
 	(select max(BatchID) from master.FactMarketHistory) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
--- FROM DUMMY TABLE
 
 -- Very slow procedure ahead:
 union
@@ -1128,14 +1121,13 @@ select 'FactMarketHistory SK_CompanyID', NULL, case when
 	(select count(*) from master.FactMarketHistory) =
 	(select count(*) from master.FactMarketHistory a join master.DimCompany c on a.SK_CompanyID = c.SK_CompanyID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_CompanyIDs match a DimCompany record with a valid date range'
--- FROM DUMMY TABLE
 
 union
 select 'FactMarketHistory SK_SecurityID', NULL, case when
 	(select count(*) from master.FactMarketHistory) =
 	(select count(*) from master.FactMarketHistory a join master.DimSecurity c on a.SK_SecurityID = c.SK_SecurityID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_SecurityIDs match a DimSecurity record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 -- union
 -- select 'FactMarketHistory SK_DateID', BatchID, Result, 'All dates are within batch date range' from (
@@ -1160,7 +1152,7 @@ select 'FactMarketHistory relative dates', NULL, case when (
 	   or DayHigh > FiftyTwoWeekHigh
 ) = 0
 then 'OK' else 'Bad Date' end, '52-week-low <= day_low <= close_price <= day_high <= 52-week-high'
--- FROM DUMMY TABLE
+ 
 
 --
 -- Checks against the FactHoldings table.
@@ -1182,7 +1174,7 @@ select 'FactHoldings batches', NULL, case when
 	(select count(distinct BatchID) from master.FactHoldings) = 3 and
 	(select max(BatchID) from master.FactHoldings) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
--- FROM DUMMY TABLE
+ 
 
 union
 /* It is possible that the dimension record has changed between orgination of the trade and the completion of the trade. *
@@ -1193,7 +1185,7 @@ select 'FactHoldings SK_CustomerID', NULL, case when
 	(select count(*) from master.FactHoldings a join master.DimCustomer c on a.SK_CustomerID = c.SK_CustomerID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID)
        )
 then 'OK' else 'Bad join' end, 'All SK_CustomerIDs match a DimCustomer record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'FactHoldings SK_AccountID', NULL, case when
@@ -1201,7 +1193,7 @@ select 'FactHoldings SK_AccountID', NULL, case when
 	(select count(*) from master.FactHoldings a join master.DimAccount c on a.SK_AccountID = c.SK_AccountID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID)
        )
 then 'OK' else 'Bad join' end, 'All SK_AccountIDs match a DimAccount record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'FactHoldings SK_CompanyID', NULL, case when
@@ -1209,7 +1201,7 @@ select 'FactHoldings SK_CompanyID', NULL, case when
 	(select count(*) from master.FactHoldings a join master.DimCompany c on a.SK_CompanyID = c.SK_CompanyID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID)
        )
 then 'OK' else 'Bad join' end, 'All SK_CompanyIDs match a DimCompany record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'FactHoldings SK_SecurityID', NULL, case when
@@ -1217,14 +1209,14 @@ select 'FactHoldings SK_SecurityID', NULL, case when
 	(select count(*) from master.FactHoldings a join master.DimSecurity c on a.SK_SecurityID = c.SK_SecurityID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID)
        )
 then 'OK' else 'Bad join' end, 'All SK_SecurityIDs match a DimSecurity record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'FactHoldings CurrentTradeID', NULL, case when
 	(select count(*) from master.FactHoldings) =
 	(select count(*) from master.FactHoldings a join master.DimTrade t on a.CurrentTradeID = t.TradeID and a.SK_DateID = t.SK_CloseDateID and a.SK_TimeID = t.SK_CloseTimeID)
 then 'OK' else 'Failed' end, 'CurrentTradeID matches a DimTrade record with and Close Date and Time are values are used as the holdings date and time'
--- FROM DUMMY TABLE
+ 
 
 -- union
 -- select 'FactHoldings SK_DateID', BatchID, Result, 'All dates are within batch date range' from (
@@ -1246,21 +1238,21 @@ select 'FactCashBalances batches', NULL, case when
 	(select count(distinct BatchID) from master.FactCashBalances) = 3 and
 	(select max(BatchID) from master.FactCashBalances) = 3
 then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'FactCashBalances SK_CustomerID', NULL, case when
 	(select count(*) from master.FactCashBalances) =
 	(select count(*) from master.FactCashBalances a join master.DimCustomer c on a.SK_CustomerID = c.SK_CustomerID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_CustomerIDs match a DimCustomer record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 union
 select 'FactCashBalances SK_AccountID', NULL, case when
 	(select count(*) from master.FactCashBalances) =
 	(select count(*) from master.FactCashBalances a join master.DimAccount c on a.SK_AccountID = c.SK_AccountID and c.EffectiveDate <= (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) and (select DateValue from master.DimDate where SK_DateID = a.SK_DateID) <= c.EndDate)
 then 'OK' else 'Bad join' end, 'All SK_AccountIDs match a DimAccount record with a valid date range'
--- FROM DUMMY TABLE
+ 
 
 -- union
 -- select 'FactCashBalances SK_DateID', BatchID, Result, 'All dates are within batch date range' from (
