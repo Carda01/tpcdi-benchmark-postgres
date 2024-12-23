@@ -17,11 +17,30 @@
  */
 
 -- Indexes to speed up greatly the Audit queries.
-CREATE INDEX IF NOT EXISTS idx_master_FactWatches_SK_DateID_DatePlaced ON master.FactWatches USING btree (SK_DateID_DatePlaced);
-CREATE INDEX IF NOT EXISTS idx_master_DimDate_SK_DateID ON master.DimDate USING btree (SK_DateID);
-CREATE INDEX IF NOT EXISTS idx_master_FactWatches_SK_DateID_DateRemoved ON master.FactWatches USING btree (SK_DateID_DateRemoved);
-CREATE INDEX IF NOT EXISTS idx_master_DimTrade_SK_CreateDateID ON master.DimTrade USING btree (SK_CreateDateID);
-CREATE INDEX IF NOT EXISTS idx_master_DimTrade_SK_CloseDateID ON master.DimTrade USING btree (SK_CloseDateID);
+-- Drop and recreate the index for SK_DateID_DatePlaced on FactWatches
+DROP INDEX IF EXISTS master.idx_master_FactWatches_SK_DateID_DatePlaced;
+CREATE INDEX idx_master_FactWatches_SK_DateID_DatePlaced 
+ON master.FactWatches USING btree (SK_DateID_DatePlaced);
+
+-- Drop and recreate the index for SK_DateID on DimDate
+DROP INDEX IF EXISTS master.idx_master_DimDate_SK_DateID;
+CREATE INDEX idx_master_DimDate_SK_DateID 
+ON master.DimDate USING btree (SK_DateID);
+
+-- Drop and recreate the index for SK_DateID_DateRemoved on FactWatches
+DROP INDEX IF EXISTS master.idx_master_FactWatches_SK_DateID_DateRemoved;
+CREATE INDEX idx_master_FactWatches_SK_DateID_DateRemoved 
+ON master.FactWatches USING btree (SK_DateID_DateRemoved);
+
+-- Drop and recreate the index for SK_CreateDateID on DimTrade
+DROP INDEX IF EXISTS master.idx_master_DimTrade_SK_CreateDateID;
+CREATE INDEX idx_master_DimTrade_SK_CreateDateID 
+ON master.DimTrade USING btree (SK_CreateDateID);
+
+-- Drop and recreate the index for SK_CloseDateID on DimTrade
+DROP INDEX IF EXISTS master.idx_master_DimTrade_SK_CloseDateID;
+CREATE INDEX idx_master_DimTrade_SK_CloseDateID 
+ON master.DimTrade USING btree (SK_CloseDateID);
 VACUUM ANALYZE;
 SET random_page_cost = 1.1;
 
@@ -244,7 +263,7 @@ then 'OK' else 'Not current' end, 'IsCurrent is 1 if EndDate is the end of time,
 
 union
 select 'DimAccount Status', NULL, case when
-	(select count(*) from master.DimAccount where Status not in ('Active', 'Inactive')) = 0
+	(select count(*) from master.DimAccount where Status not in ('ACTIVE', 'INACTIVE')) = 0
 then 'OK' else 'Bad value' end, 'All Status values are valid'
 
 union
