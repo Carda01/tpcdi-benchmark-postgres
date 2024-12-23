@@ -1,7 +1,13 @@
 -- dimcustomer
 truncate table master.dimcustomer;
 insert into master.dimcustomer
-	with customer as (
+    with historical_customermgmt as (
+        select cm.*,
+               lead(actionts) over (partition by ca_id order by actionts ASC) as next_ts
+        from processing.customermgmt cm
+    )
+
+	, customer as (
 		select
 		  row_number() over(order by cm.c_id) as sk
 		, cm.c_id
@@ -68,16 +74,20 @@ insert into master.dimcustomer
 		, ntr.tx_rate as nat_tx_rate
 		, ltr.tx_name as lcl_tx_name
 		, ltr.tx_rate as lcl_tx_rate
-		, case
-			when cm.actionts::date = max(cm.actionts::date) over(partition by cm.c_id range between unbounded preceding and unbounded following)
-			then true
-			else false
-		  end as iscurrent
+        , case
+              when cm.next_ts is null
+              then true
+              else false
+          end as iscurrent
 		, 1 as batchid
 		, cm.actionts::date as effectivedate
-		, '9999-12-31'::date as enddate
+        , case
+              when cm.next_ts is null
+              then '9999-12-31'::date
+              else cm.next_ts::date
+          end as enddate
 		, cm.actiontype
-		from processing.customermgmt cm
+		from historical_customermgmt cm
 		cross join processing.batchdate bd
 		left join master.taxrate ntr
 			on cm.c_nat_tx_id = ntr.tx_id

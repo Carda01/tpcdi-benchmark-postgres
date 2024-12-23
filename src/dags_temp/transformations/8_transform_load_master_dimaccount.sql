@@ -1,7 +1,13 @@
 -- dimaccount
 truncate table master.dimaccount;
 insert into master.dimaccount
-	with account as (
+    with historical_customermgmt as (
+        select cm.*,
+               lead(actionts) over (partition by ca_id order by actionts ASC) as next_ts
+        from processing.customermgmt cm
+    )
+
+    , account as (
 		select
 		  row_number() over(order by cm.ca_id) as sk
 		, cm.ca_id
@@ -14,16 +20,20 @@ insert into master.dimaccount
 		  end as status
 		, cm.ca_name
 		, cm.ca_tax_st
-		, case
-			when cm.actionts::date = max(cm.actionts::date) over(partition by cm.ca_id range between unbounded preceding and unbounded following)
-			then true
-			else false
-		  end as iscurrent
+        , case
+		    when cm.next_ts is null
+            then true
+            else false
+          end as iscurrent
 		, 1 as batchid
 		, cm.actionts::date as effectivedate
-		, '9999-12-31'::date as enddate
+        , case
+              when cm.next_ts is null
+              then '9999-12-31'::date
+              else cm.next_ts::date
+          end as enddate
 		, cm.actiontype
-		from processing.customermgmt cm
+		from historical_customermgmt cm
 		cross join processing.batchdate bd
 		left join master.dimbroker b
 			on cm.ca_b_id = b.brokerid
@@ -79,4 +89,4 @@ insert into master.dimaccount
 	, batchid
 	, effectivedate
 	, enddate
-	from ca_all
+	from ca_all;
