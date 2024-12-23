@@ -3,7 +3,7 @@ truncate table master.dimcustomer;
 insert into master.dimcustomer
     with historical_customermgmt as (
         select cm.*,
-               lead(actionts) over (partition by ca_id order by actionts ASC) as next_ts
+               lead(actionts) over (partition by c_id order by actionts ASC) as next_ts
         from processing.customermgmt cm
     )
 
@@ -22,7 +22,6 @@ insert into master.dimcustomer
 		, case
 			when upper(cm.c_gndr) = 'M' or upper(cm.c_gndr) = 'F'
 			then upper(cm.c_gndr)
-			else 'U'
 		  end as gender
 		, cm.c_tier
 		, cm.c_dob
@@ -156,7 +155,7 @@ insert into master.dimcustomer
 		, cm.c_l_name
 		, cm.c_f_name
 		, cm.c_m_name
-		, cm.gender
+		, coalesce(cm.gender, 'U') as gender
 		, cm.c_tier
 		, cm.c_dob
 		, cm.c_adline1
