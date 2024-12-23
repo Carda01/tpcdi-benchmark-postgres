@@ -35,6 +35,7 @@ insert into master.dimsecurity
 		master.dimcompany c
 	where f.status = s.st_id
 	and ((ltrim(f.conameorcik, '0') = c.companyid::varchar) 
-		or (f.conameorcik = c.name))
+		or (f.conameorcik = c.name)
+	    or (c.companyid = 0 and f.conameorcik = '0000000000'))
 	and left(pts, 8)::date >= c.effectivedate
 	and left(pts, 8)::date < c.enddate;
