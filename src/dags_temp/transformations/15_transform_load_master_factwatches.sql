@@ -14,18 +14,20 @@ insert into master.factwatches
 		and w2.w_action = 'CNCL'
 	) 
 
-	select 
+	select
 		c.sk_customerid as sk_customerid,
 		s.sk_securityid as sk_securityid,
 		to_char(w.dateplaced, 'yyyymmdd')::numeric as sk_dateid_dateplaced,
 		to_char(w.dateremoved, 'yyyymmdd')::numeric as sk_dateid_dateremoved,
 		1 as batchid
-	from watches w,
-		master.dimcustomer c,
-		master.dimsecurity s,
-		master.dimdate d1,
-		master.dimdate d2
-	where w.w_c_id = c.customerid
-	and w.w_s_symb = s.symbol
-	and w.dateplaced = d1.datevalue
-	and w.dateremoved = d2.datevalue;
+	from watches w
+	join master.dimcustomer c
+		on w.w_c_id = c.customerid
+		and c.effectivedate <= w.dateplaced
+		and w.dateplaced <= c.enddate
+	join master.dimsecurity s
+		on w.w_s_symb = s.symbol
+	join master.dimdate d1
+		on w.dateplaced = d1.datevalue
+	join master.dimdate d2
+		on w.dateremoved = d2.datevalue;
