@@ -14,8 +14,8 @@ insert into master.dimcustomer
 		, cm.c_id
 		, cm.c_tax_id
 		, case
-			when cm.actiontype = 'INACT' then 'INACTIVE'
-			else 'ACTIVE'
+			when cm.actiontype = 'INACT' then 'Inactive'
+			else 'Active'
 		  end as status
 		, cm.c_l_name
 		, cm.c_f_name
