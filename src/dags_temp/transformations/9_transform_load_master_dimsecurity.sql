@@ -1,6 +1,11 @@
 -- master.dimsecurity transform and load
 truncate table master.dimsecurity;
-insert into master.dimsecurity 
+with historical_finwire_sec as (
+       select f.*,
+       lead(pts) over (partition by symbol order by pts ASC) as next_pts
+       from processing.finwire_sec f
+)
+insert into master.dimsecurity
 	select 
 		row_number() over() as sk_securityid,
 		symbol,
@@ -13,15 +18,19 @@ insert into master.dimsecurity
 		left(firsttradedate, 8)::date,
 		left(firsttradeexchg, 8)::date,
 		dividend::numeric(10,2),
-		case 
-			when lead( (select batchdate from processing.batchdate) ) over ( partition by symbol order by pts asc ) is null 
-			then true 
-			else false 
-			end as iscurrent,
+		case
+		    when f.next_pts is null
+            then true
+            else false
+        end as iscurrent,
 		1 as batchid,
 		left(f.pts, 8)::date,
-		'9999-12-31'::date as enddate 
-	from processing.finwire_sec f,
+        case
+		    when f.next_pts is null
+            then '9999-12-31'::date
+            else left(f.next_pts, 8)::date
+        end as enddate
+	from historical_finwire_sec f,
 		master.statustype s,
 		master.dimcompany c
 	where f.status = s.st_id
