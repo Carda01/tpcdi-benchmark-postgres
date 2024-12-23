@@ -5,6 +5,7 @@ insert into master.dimcustomer
         select cm.*,
                lead(actionts) over (partition by c_id order by actionts ASC) as next_ts
         from processing.customermgmt cm
+        where cm.actiontype in ('NEW', 'UPDCUST', 'INACT')
     )
 
 	, customer as (
@@ -92,7 +93,6 @@ insert into master.dimcustomer
 			on cm.c_nat_tx_id = ntr.tx_id
 		left join master.taxrate ltr
 			on cm.c_lcl_tx_id = ltr.tx_id
-		where cm.actiontype in ('NEW', 'UPDCUST', 'INACT')
 	)
 
 	, c_new as (
