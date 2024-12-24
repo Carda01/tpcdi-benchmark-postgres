@@ -14,8 +14,10 @@ insert into master.dimaccount
 		, b.sk_brokerid
 		, c.sk_customerid
 		, case
-			when cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT', 'UPDCUST')
+			when cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT')
 			then 'ACTIVE'
+		    when cm.actiontype = 'UPDCUST'
+		    then null
 			else 'INACTIVE'
 		  end as status
 		, cm.ca_name
