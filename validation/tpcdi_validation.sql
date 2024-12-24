@@ -82,8 +82,8 @@ from (
 			-- (cannot join on SK_DateID_DateRemoved because that field can be null)
 			inner join master.DimSecurity s on f.SK_SecurityID = s.SK_SecurityID
     /* Additional information used at Audit time */
-    union select 'master.DimCustomer' as MessageSource, 'Inactive customers' as MessageText, count(*) from master.DimCustomer where IsCurrent = 1 and Status = 'Inactive'
-    union select 'FactWatches' as MessageSource, 'Inactive watches' as MessageText, count(*) from FactWatches where SK_DATEID_DATEREMOVED is not null
+    union select 'master.DimCustomer' as MessageSource, 'Inactive customers' as MessageText, count(*) from master.DimCustomer where IsCurrent = True and Status = 'Inactive'
+    union select 'FactWatches' as MessageSource, 'Inactive watches' as MessageText, count(*) from master.FactWatches where SK_DATEID_DATEREMOVED is not null
 ) y on 1=1
 ; 
 /* Phase complete record */
@@ -102,8 +102,4 @@ from (
             ,'Batch Complete' as MessageText
             ,'PCR' as MessageType
             ,NULL as MessageData
-  from master.Dimessages
-) 
-;
-
-
+  from master.Dimessages);

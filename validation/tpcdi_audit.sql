@@ -606,7 +606,7 @@ select 'DimSecurity EffectiveDate', BatchID, Result, 'All records from a batch h
 
 union
 select 'DimSecurity Status', NULL, case when
-	(select count(*) from master.DimSecurity where Status not in ('Active', 'Inactive')) = 0
+	(select count(*) from master.DimSecurity where Status not in ('ACTIVE', 'INACTIVE')) = 0
 then 'OK' else 'Bad value' end, 'All Status values are valid'
 
 
@@ -709,7 +709,7 @@ select 'DimCompany EffectiveDate', BatchID, Result, 'All records from a batch ha
 
 union
 select 'DimCompany Status', NULL, case when
-	(select count(*) from master.DimCompany where Status not in ('Active', 'Inactive')) = 0
+	(select count(*) from master.DimCompany where Status not in ('ACTIVE', 'INACTIVE')) = 0
 then 'OK' else 'Bad value' end, 'All Status values are valid'
  
 
@@ -1024,7 +1024,7 @@ then 'OK' else 'Bad join' end, 'All SK_AccountIDs match a DimAccount record with
 union
 select 'DimTrade Status', NULL, case when (
 	select count(*) from master.DimTrade
-	where Status not in ( 'Canceled', 'Pending', 'Submitted', 'Active', 'Completed' )
+	where Status not in ( 'CANCELED', 'PENDING', 'SUBMITTED', 'ACTIVE', 'COMPLETED' )
 ) = 0
 then 'OK' else 'Bad value' end, 'All Trade Status values are valid'
 
