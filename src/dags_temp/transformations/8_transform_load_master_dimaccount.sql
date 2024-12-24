@@ -43,14 +43,13 @@ insert into master.dimaccount
 			on cm.c_id = c.customerid
 			and cm.actionts::date >= c.effectivedate
 			and cm.actionts::date <= c.enddate
-		where cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT', 'CLOSEACCT', 'UPDCUST', 'INACT')
 	)
 	
 	, ca_new as (
 			select
 			*
 			from account
-			where actiontype = 'NEW'
+			where actiontype in ('NEW', 'ADDACCT')
 	)
 	
 	, ca_not_new as (
@@ -70,7 +69,7 @@ insert into master.dimaccount
 		from account a
 		inner join ca_new cn
 			on a.ca_id = cn.ca_id
-		where a.actiontype != 'NEW'
+		where a.actiontype not in ('NEW', 'ADDACCT')
 	)
 	
 	, ca_all as (
