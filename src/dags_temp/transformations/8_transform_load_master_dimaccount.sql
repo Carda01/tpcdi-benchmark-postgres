@@ -14,8 +14,10 @@ insert into master.dimaccount
 		, b.sk_brokerid
 		, c.sk_customerid
 		, case
-			when cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT', 'UPDCUST')
+			when cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT')
 			then 'ACTIVE'
+		    when cm.actiontype = 'UPDCUST'
+		    then null
 			else 'INACTIVE'
 		  end as status
 		, cm.ca_name
@@ -40,15 +42,14 @@ insert into master.dimaccount
 		left join master.dimcustomer c
 			on cm.c_id = c.customerid
 			and cm.actionts::date >= c.effectivedate
-			and cm.actionts::date <  c.enddate
-		where cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT', 'CLOSEACCT', 'UPDCUST', 'INACT')
+			and cm.actionts::date <= c.enddate
 	)
 	
 	, ca_new as (
 			select
 			*
 			from account
-			where actiontype = 'NEW'
+			where actiontype in ('NEW', 'ADDACCT')
 	)
 	
 	, ca_not_new as (
@@ -68,7 +69,7 @@ insert into master.dimaccount
 		from account a
 		inner join ca_new cn
 			on a.ca_id = cn.ca_id
-		where a.actiontype != 'NEW'
+		where a.actiontype not in ('NEW', 'ADDACCT')
 	)
 	
 	, ca_all as (
