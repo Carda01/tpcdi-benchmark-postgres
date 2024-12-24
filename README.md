@@ -11,3 +11,5 @@ The set up is programmed in different python notebooks so the user just must cli
 1. Open and run src/setup. Also make sure that you follow the instructions written between cells.  This notebook will install and configure Airflow in Docker and connect it to your PostgreSQL database. 
 2. Open and run src/create_sf for every Scale Factor that you want to test. This notebook will create the necessary DAGs and tasks for one scale factor that will perform the benchmark.
 3. Now everything should be up and working. Feel free to run and test any DAG or task, they can be run from terminal or from the CLI app.
+
+ - You can find the final result of our test in our [Power BI dashboard](https://app.powerbi.com/view?r=eyJrIjoiZTZmNTJmZDUtOGE1Mi00MGQyLWEwNWQtMjEyZjRjNGM2OTU1IiwidCI6ImYxMTZkNWYzLTk1NjEtNGIzZi1iNjc4LTQwZTMyNjk4ZTJjMSJ9&pageName=8f82875a2358e0780243)
