@@ -29,12 +29,12 @@ FROM watches w
 JOIN master.dimcustomer c
 	ON w.w_c_id = c.customerid
 	AND c.effectivedate <= w.dateplaced
-	AND w.dateplaced <= c.enddate
+	AND w.dateplaced < c.enddate
 -- Join to find the surrogate key for security
 JOIN master.dimsecurity s
 	ON w.w_s_symb = s.symbol
 	AND s.effectivedate <= w.dateplaced
-	AND w.dateplaced <= s.enddate
+	AND w.dateplaced < s.enddate
 -- Join to find the surrogate key for the date placed
 JOIN master.dimdate d1
 	ON w.dateplaced = d1.datevalue

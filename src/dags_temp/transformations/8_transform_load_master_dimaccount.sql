@@ -40,7 +40,7 @@ insert into master.dimaccount
 		left join master.dimcustomer c
 			on cm.c_id = c.customerid
 			and cm.actionts::date >= c.effectivedate
-			and cm.actionts::date <= c.enddate
+			and cm.actionts::date <  c.enddate
 		where cm.actiontype in ('NEW', 'ADDACCT', 'UPDACCT', 'CLOSEACCT', 'UPDCUST', 'INACT')
 	)
 	
