@@ -1,0 +1,13 @@
+type,scale_factor,total_time
+dw_sf_3,3,278
+incremental_first_upload_sf_3,3,27
+incremental_second_upload_sf_3,3,24
+dw_sf_4,4,433
+incremental_first_upload_sf_4,4,36
+incremental_second_upload_sf_4,4,35
+dw_sf_5,5,567
+incremental_first_upload_sf_5,5,45
+incremental_second_upload_sf_5,5,45
+dw_sf_10,10,1468
+incremental_first_upload_sf_10,10,98
+incremental_second_upload_sf_10,10,146

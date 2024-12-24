@@ -1,0 +1,13 @@
+dag_id,task_id,start_date,end_date,duration
+incremental_first_upload_sf_10,create_schema_processing,2024-12-24 18:42:42.151849+00,2024-12-24 18:42:42.345922+00,0
+incremental_first_upload_sf_10,truncate_processing,2024-12-24 18:42:43.276986+00,2024-12-24 18:42:43.48594+00,0
+incremental_first_upload_sf_10,load_processing,2024-12-24 18:42:44.068107+00,2024-12-24 18:42:44.498577+00,0
+incremental_first_upload_sf_10,prospect,2024-12-24 18:42:45.776869+00,2024-12-24 18:43:27.810165+00,42
+incremental_first_upload_sf_10,tl_master_dimcustomer,2024-12-24 18:42:45.814618+00,2024-12-24 18:42:46.051124+00,0
+incremental_first_upload_sf_10,tl_master_dimaccount,2024-12-24 18:42:46.987923+00,2024-12-24 18:42:47.188651+00,0
+incremental_first_upload_sf_10,tl_master_dimtrade,2024-12-24 18:42:48.123618+00,2024-12-24 18:42:48.532562+00,0
+incremental_first_upload_sf_10,tl_master_factcashbalances,2024-12-24 18:42:49.187056+00,2024-12-24 18:42:49.398761+00,0
+incremental_first_upload_sf_10,tl_master_factholdings,2024-12-24 18:42:49.212668+00,2024-12-24 18:42:50.007319+00,1
+incremental_first_upload_sf_10,tl_master_factmarkethistory,2024-12-24 18:42:49.239149+00,2024-12-24 18:42:51.788035+00,3
+incremental_first_upload_sf_10,tl_master_factwatches,2024-12-24 18:42:49.267923+00,2024-12-24 18:44:20.15449+00,91
+incremental_first_upload_sf_10,update_prospect,2024-12-24 18:43:28.299995+00,2024-12-24 18:43:43.36692+00,15

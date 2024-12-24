@@ -1,0 +1,12 @@
+dag_id,task_id,start_date,end_date,duration
+incremental_second_upload_sf_4,truncate_processing_b3,2024-12-24 17:32:51.697473+00,2024-12-24 17:32:51.90429+00,0
+incremental_second_upload_sf_4,load_processing_b3,2024-12-24 17:32:52.847512+00,2024-12-24 17:32:53.153689+00,0
+incremental_second_upload_sf_4,prospect_b3,2024-12-24 17:32:54.13282+00,2024-12-24 17:33:01.826681+00,8
+incremental_second_upload_sf_4,tl_master_dimcustomer_b3,2024-12-24 17:32:54.165212+00,2024-12-24 17:32:54.398018+00,0
+incremental_second_upload_sf_4,tl_master_dimaccount_b3,2024-12-24 17:32:55.295206+00,2024-12-24 17:32:55.468243+00,0
+incremental_second_upload_sf_4,tl_master_dimtrade_b3,2024-12-24 17:32:56.56932+00,2024-12-24 17:32:56.900883+00,0
+incremental_second_upload_sf_4,tl_master_factcashbalances_b3,2024-12-24 17:32:57.723076+00,2024-12-24 17:32:57.969935+00,0
+incremental_second_upload_sf_4,tl_master_factholdings_b3,2024-12-24 17:32:57.754387+00,2024-12-24 17:32:58.082581+00,0
+incremental_second_upload_sf_4,tl_master_factmarkethistory_b3,2024-12-24 17:32:57.790368+00,2024-12-24 17:32:58.846437+00,1
+incremental_second_upload_sf_4,tl_master_factwatches_b3,2024-12-24 17:32:57.82476+00,2024-12-24 17:33:25.783432+00,28
+incremental_second_upload_sf_4,update_prospect_b3,2024-12-24 17:33:02.712145+00,2024-12-24 17:33:04.989417+00,2

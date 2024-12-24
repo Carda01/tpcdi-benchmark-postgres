@@ -1,0 +1,26 @@
+dag_id,task_id,start_date,end_date,duration
+dw_sf_5,create_processing_schema,2024-12-24 17:47:47.602821+00,2024-12-24 17:47:47.823642+00,0
+dw_sf_5,convert_customermgmt_xml_to_csv,2024-12-24 17:47:48.70525+00,2024-12-24 17:47:51.587381+00,3
+dw_sf_5,load_finwire_to_processing,2024-12-24 17:47:48.732869+00,2024-12-24 17:47:49.414541+00,1
+dw_sf_5,load_txt_csv_sources_to_processing,2024-12-24 17:47:48.783451+00,2024-12-24 17:48:43.868122+00,55
+dw_sf_5,parse_finwire,2024-12-24 17:47:49.987732+00,2024-12-24 17:48:32.16146+00,42
+dw_sf_5,load_customer_mgmt_to_processing,2024-12-24 17:47:52.149691+00,2024-12-24 17:47:52.424615+00,0
+dw_sf_5,create_master_schema,2024-12-24 17:48:44.468676+00,2024-12-24 17:48:44.677318+00,0
+dw_sf_5,load_directly_master_tables,2024-12-24 17:48:45.858978+00,2024-12-24 17:48:46.283807+00,0
+dw_sf_5,transform_load_master_prospect,2024-12-24 17:48:47.147383+00,2024-12-24 17:48:47.469592+00,0
+dw_sf_5,transform_load_master_dimbroker,2024-12-24 17:48:47.174515+00,2024-12-24 17:48:47.398385+00,0
+dw_sf_5,transform_load_master_dimcompany,2024-12-24 17:48:47.202435+00,2024-12-24 17:48:47.451245+00,0
+dw_sf_5,transform_load_master_dimcustomer,2024-12-24 17:48:48.392962+00,2024-12-24 17:48:49.471937+00,1
+dw_sf_5,transform_load_master_financial,2024-12-24 17:48:48.421323+00,2024-12-24 17:48:49.622686+00,1
+dw_sf_5,load_master_dimessages_dimcompany,2024-12-24 17:48:48.448906+00,2024-12-24 17:48:48.661883+00,0
+dw_sf_5,transform_load_master_dimsecurity,2024-12-24 17:48:48.482119+00,2024-12-24 17:49:14.735631+00,26
+dw_sf_5,update_master_prospect,2024-12-24 17:48:50.288781+00,2024-12-24 17:48:51.061305+00,1
+dw_sf_5,load_master_dimessages_dimcustomer,2024-12-24 17:48:50.319947+00,2024-12-24 17:48:50.581106+00,0
+dw_sf_5,transform_load_master_dimaccount,2024-12-24 17:48:50.350248+00,2024-12-24 17:50:32.676021+00,102
+dw_sf_5,transform_load_master_factmarkethistory,2024-12-24 17:49:16.15323+00,2024-12-24 17:56:28.118493+00,432
+dw_sf_5,transform_load_master_factwatches,2024-12-24 17:49:16.18306+00,2024-12-24 17:49:55.276239+00,39
+dw_sf_5,transform_load_master_factcashbalances,2024-12-24 17:50:33.846116+00,2024-12-24 17:50:36.350277+00,3
+dw_sf_5,load_master_dimessages_factmarkethistory,2024-12-24 17:56:29.558713+00,2024-12-24 17:56:30.020101+00,0
+dw_sf_5,transform_load_master_dimtrade,2024-12-24 17:56:30.663949+00,2024-12-24 17:57:12.609484+00,42
+dw_sf_5,load_master_dimessages_dimtrade,2024-12-24 17:57:13.19527+00,2024-12-24 17:57:13.709761+00,1
+dw_sf_5,transform_load_master_factholdings,2024-12-24 17:57:13.222855+00,2024-12-24 17:57:14.657387+00,1
