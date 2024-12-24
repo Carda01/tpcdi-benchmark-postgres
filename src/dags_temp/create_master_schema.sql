@@ -110,7 +110,7 @@ drop table if exists master.dimcustomer;
 create table master.dimcustomer(
 	sk_customerid numeric(11) not null check(sk_customerid >= 0),
 	customerid numeric(11) not null check(customerid >= 0),
-	taxid char(20) not null,
+	taxid varchar(20) not null,
 	status char(10) not null,
 	lastname char(30) not null,
 	firstname char(20) not null,

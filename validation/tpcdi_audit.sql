@@ -148,7 +148,6 @@ then 'OK' else 'Not batch 1' end, 'All rows report BatchID = 1'
 
 union
 select 'DimBroker IsCurrent', NULL, case when
--- 	(select count(*) from master.DimBroker where IsCurrent <> 1) = 0
     (select count(*) from master.DimBroker where IsCurrent <> TRUE) = 0
 then 'OK' else 'Not current' end, 'All rows have IsCurrent = 1'
 
@@ -255,8 +254,6 @@ select 'DimAccount EffectiveDate', BatchID, Result, 'All records from a batch ha
 union
 select 'DimAccount IsCurrent', NULL, case when
 	(select count(*) from master.DimAccount) =
--- 	(select count(*) from master.DimAccount where EndDate = '9999-12-31' and IsCurrent = 1) +
--- 	(select count(*) from master.DimAccount where EndDate < '9999-12-31' and IsCurrent = 0)
     (select count(*) from master.DimAccount where EndDate = '9999-12-31' and IsCurrent = TRUE) +
 	(select count(*) from master.DimAccount where EndDate < '9999-12-31' and IsCurrent = FALSE)
 then 'OK' else 'Not current' end, 'IsCurrent is 1 if EndDate is the end of time, else Iscurrent is 0'
@@ -359,8 +356,6 @@ then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
 union
 select 'DimCustomer IsCurrent', NULL, case when
 	(select count(*) from master.DimCustomer) =
--- 	(select count(*) from master.DimCustomer where EndDate = '9999-12-31' and IsCurrent = 1) +
--- 	(select count(*) from master.DimCustomer where EndDate < '9999-12-31' and IsCurrent = 0)
     (select count(*) from master.DimCustomer where EndDate = '9999-12-31' and IsCurrent = TRUE) +
 	(select count(*) from master.DimCustomer where EndDate < '9999-12-31' and IsCurrent = FALSE)
 then 'OK' else 'Not current' end, 'IsCurrent is 1 if EndDate is the end of time, else Iscurrent is 0'
@@ -498,7 +493,7 @@ union
 select 'DimCustomer NationalTaxRate', NULL, case when
 	(select count(*) from master.DimCustomer) =
 	(select count(*) from master.DimCustomer c join master.TaxRate t on c.NationalTaxRateDesc = t.TX_NAME and c.NationalTaxRate = t.TX_RATE) and
-	(select count(distinct NationalTaxRateDesc) from master.DimCustomer) >= 9   -- Including the inequality for now, because the generated data is not sticking to national tax rates
+	(select count(distinct NationalTaxRateDesc) from master.DimCustomer) >= 9
 then 'OK' else 'Mismatch' end, 'NationalTaxRateDesc and NationalTaxRate values are from TaxRate table'
 
 
@@ -509,10 +504,8 @@ select 'DimCustomer demographic fields', NULL, case when
 		join master.Prospect p on upper(c.FirstName || c.LastName || c.AddressLine1 || COALESCE(c.AddressLine2,'') || c.PostalCode)
 						 = upper(p.FirstName || p.LastName || p.AddressLine1 || COALESCE(p.AddressLine2,'') || p.PostalCode)
 	                    and COALESCE(c.CreditRating,0) = COALESCE(p.CreditRating,0) and COALESCE(c.NetWorth,0) = COALESCE(p.NetWorth,0) and COALESCE(c.MarketingNameplate, '') = COALESCE(p.MarketingNameplate,'')
--- 					    and c.IsCurrent = 1
 	                    and c.IsCurrent = TRUE
 	) = (
--- 		select count(*) from master.DimCustomer where AgencyID is not null and IsCurrent = 1
 	    select count(*) from master.DimCustomer where AgencyID is not null and IsCurrent = TRUE
 	)
 then 'OK' else 'Mismatch' end, 'For current customer records that match Prospect records, the demographic fields also match'
@@ -583,8 +576,6 @@ then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
 union
 select 'DimSecurity IsCurrent', NULL, case when
 	(select count(*) from master.DimSecurity) =
--- 	(select count(*) from master.DimSecurity where EndDate = '9999-12-31' and IsCurrent = 1) +
--- 	(select count(*) from master.DimSecurity where EndDate < '9999-12-31' and IsCurrent = 0)
     (select count(*) from master.DimSecurity where EndDate = '9999-12-31' and IsCurrent = TRUE) +
 	(select count(*) from master.DimSecurity where EndDate < '9999-12-31' and IsCurrent = FALSE)
 then 'OK' else 'Not current' end, 'IsCurrent is 1 if EndDate is the end of time, else Iscurrent is 0'
@@ -722,7 +713,7 @@ select 'DimCompany distinct names', NULL, case when	(
 then 'OK' else 'Mismatch' end, 'Every company has a unique name'
  
 
-union				-- Curious, there are duplicate industry names in Industry table.  Should there be?  That's why the distinct stuff...
+union				
 select 'DimCompany Industry', NULL, case when
 	(select count(*) from master.DimCompany) =
 	(select count(*) from master.DimCompany where Industry in (select distinct IN_NAME from master.Industry))
@@ -738,7 +729,7 @@ select 'DimCompany SPrating', NULL, case when (
 then 'OK' else 'Bad value' end, 'All SPrating values are valid'
 
 
-union			-- Right now we have blank (but not null) country names.  Should there be?
+union
 select 'DimCompany Country', NULL, case when (
 	select count(*) from master.DimCompany
 	where Country not in ( 'Canada', 'United States of America', '' )
@@ -781,7 +772,7 @@ then 'OK' else 'Mismatch' end, 'BatchID values must match Audit table'
  union
 select 'Prospect Country', NULL, case when (
 	select count(*) from master.Prospect
-	where Country not in ( 'Canada', 'United States of America' ) -- For the tiny sample data it would be ( 'CANADA', 'USA' )
+	where Country not in ( 'Canada', 'United States of America' )
 	  and Country is not null
 ) = 0
 then 'OK' else 'Bad value' end, 'All Country values are valid'
@@ -907,8 +898,6 @@ then 'OK' else 'Bad join' end, 'All SK_SecurityIDs match a DimSecurity record wi
 union
 select 'DimTrade row count', BatchID, Result, 'Actual total matches Audit table' from (
 	select distinct BatchID, case when
--- 		(select MessageData from master.DImessages where MessageSource = 'DimTrade' and MessageType = 'Validation' and MessageText = 'Row count' and BatchID = a.BatchID)  =
--- 		(select sum(Value) from master.Audit where DataSet = 'DimTrade' and Attribute = 'T_NEW' and BatchID <= a.BatchID)
 	    (select MessageData from master.DImessages where MessageSource = 'DimTrade' and MessageType = 'Validation' and MessageText = 'Row count' and BatchID = a.BatchID)  =
 		(select sum(Value)::text from master.Audit where DataSet = 'DimTrade' and Attribute = 'T_NEW' and BatchID <= a.BatchID)
 	then 'OK' else 'Mismatch' end as Result
@@ -1072,9 +1061,6 @@ then 'OK' else 'Bad Qtr' end, 'All quarters are in ( 1, 2, 3, 4 )'
 union
 select 'Financial FI_QTR_START_DATE', NULL, case when (
 	select count(*) from master.Financial
--- 	where FI_YEAR <> year(FI_QTR_START_DATE)
--- 	   or month(FI_QTR_START_DATE) <> (FI_QTR-1)*3+1
--- 	   or day(FI_QTR_START_DATE) <> 1
     where FI_YEAR <> date_part('year', FI_QTR_START_DATE)
 	   or date_part('month', FI_QTR_START_DATE) <> (FI_QTR-1)*3+1
 	   or date_part('day', FI_QTR_START_DATE) <> 1

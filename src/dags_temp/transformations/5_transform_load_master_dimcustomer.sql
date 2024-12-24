@@ -150,7 +150,7 @@ insert into master.dimcustomer
 		select
 		  cm.sk
 		, cm.c_id
-		, cm.c_tax_id
+		, RTRIM(cm.c_tax_id) as c_tax_id
 		, cm.status
 		, cm.c_l_name
 		, cm.c_f_name

@@ -29,7 +29,7 @@ WITH sk_customer as (
 , customer_insert as (
 	SELECT  row_number() over(order by C_ID) + sk_customer.max_customer_id as sk_customerid,
 			C_ID as customerid,
-			C_TAX_ID as taxid,
+			RTRIM(C_TAX_ID) as taxid,
 			ST_NAME as status,
 			C_L_NAME as lastname,
 			C_F_NAME as firstname,
